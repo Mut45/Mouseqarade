@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 974c623555059b446ad68e616464f268
+  - enabled: 1
+    path: Assets/Scenes/CutScene.unity
+    guid: d3ddc31dc6a647b408f47b4a64a6a9a6
+  - enabled: 1
+    path: Assets/Scenes/IngameScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/CatWin.unity
+    guid: 29379f50b1eb350498945b7add359ff3
+  - enabled: 1
+    path: Assets/Scenes/RatWin.unity
+    guid: a364d34c5701c26408e1e90840df2db4
+  m_configObjects: {}
