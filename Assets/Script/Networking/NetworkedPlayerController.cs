@@ -8,8 +8,12 @@ public class NetworkedPlayerController : NetworkBehaviour
     [Header("Player Movement Reference")]
     [SerializeField] private PlayerMovement playerMovement;
 
-    private PlayerInputNetworkData currentInputData;
-
+    //private PlayerInputNetworkData currentInputData;
+    private NetworkVariable<PlayerInputNetworkData> syncedInputData = new (
+        default, 
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Server
+    );
     private void Awake()
     {
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
@@ -22,19 +26,35 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
+        // if (!IsOwner) return;
 
-        PlayerInputNetworkData inputData = ReadLocalInput();
-        playerMovement.UpdateVisuals(inputData.InputDirection);
-        Debug.Log($"[CLIENT {OwnerClientId}] Input read: {inputData.InputDirection}");
-        SubmitInputDataViaServerRpc(inputData);
+        // PlayerInputNetworkData inputData = ReadLocalInput();
+        // playerMovement.UpdateVisuals(inputData.InputDirection);
+        // Debug.Log($"[CLIENT {OwnerClientId}] Input read: {inputData.InputDirection}");
+        
+        // SubmitInputDataViaServerRpc(inputData);
+        if (IsOwner)
+        {
+            PlayerInputNetworkData inputData = ReadLocalInput();
+            if (IsServer)
+            {
+                syncedInputData.Value = inputData;
+            } 
+            else
+            {
+                SubmitInputDataViaServerRpc(inputData);    
+            }
+        }
+
+        playerMovement.UpdateVisuals(syncedInputData.Value.InputDirection);
+
     }
 
     void FixedUpdate()
     {
         if (!IsServer) return;
 
-        playerMovement.SetMovementInput(currentInputData.InputDirection);
+        playerMovement.SetMovementInput(syncedInputData.Value.InputDirection);
         playerMovement.Move(Time.fixedDeltaTime);
     }
 
@@ -56,11 +76,19 @@ public class NetworkedPlayerController : NetworkBehaviour
         return inputData; 
     }
 
+    // [ServerRpc]
+    // private void SubmitInputDataViaServerRpc(PlayerInputNetworkData inputData)
+    // {
+    //     if (inputData.InputDirection.sqrMagnitude > 1.0f) inputData.InputDirection = inputData.InputDirection.normalized;
+
+    //     currentInputData = inputData;
+    // }
     [ServerRpc]
     private void SubmitInputDataViaServerRpc(PlayerInputNetworkData inputData)
     {
-        if (inputData.InputDirection.sqrMagnitude > 1.0f) inputData.InputDirection = inputData.InputDirection.normalized;
+        if (inputData.InputDirection.sqrMagnitude > 1.0f) 
+            inputData.InputDirection = inputData.InputDirection.normalized;
 
-        currentInputData = inputData;
+        syncedInputData.Value = inputData;
     }
 }
