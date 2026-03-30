@@ -15,6 +15,7 @@ public class PlayerRoleState : NetworkBehaviour
     [Header("Ability Controller References")]
     [SerializeField] private CatAbilityController catAbility;
     [SerializeField] private MouseAbilityController mouseAbility;
+    
     private void Awake()
     {
         if (catAbility == null) catAbility = GetComponent<CatAbilityController>();
@@ -31,10 +32,24 @@ public class PlayerRoleState : NetworkBehaviour
     {
         currentRole.OnValueChanged -= HandleRoleChanged;
     }
-
-    private void HandleRoleChanged(PlayerRole prevRole, PlayerRole curRole)
+    private void ApplyPlayerRole(PlayerRole role)
     {
-        OnRoleChanged?.Invoke(curRole);
+        bool isMouse = role == PlayerRole.Mouse;
+
+        if (catAbility != null)
+        {
+            catAbility.enabled = !isMouse;            
+        }
+
+        if (mouseAbility != null)
+        {
+            mouseAbility.enabled = isMouse;            
+        }
+    }
+    private void HandleRoleChanged(PlayerRole prevRole, PlayerRole currRole)
+    {
+        ApplyPlayerRole(currRole);
+        OnRoleChanged?.Invoke(currRole);
     }
 
     public PlayerRole GetRole()

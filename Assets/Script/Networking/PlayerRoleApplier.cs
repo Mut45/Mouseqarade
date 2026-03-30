@@ -21,8 +21,6 @@ public class PlayerRoleApplier : MonoBehaviour
     [Header("Base Visuals")]
     [SerializeField] private RuntimeAnimatorController mouseAnimationController;
     [SerializeField] private RuntimeAnimatorController catAnimationController;
-    [SerializeField] private Sprite mouseSprite;
-    [SerializeField] private Sprite catSprite;
     private void OnEnable()
     {
         if (roleState != null) 
@@ -38,6 +36,52 @@ public class PlayerRoleApplier : MonoBehaviour
             roleState.OnRoleChanged -= ApplyPlayerRole;
         }
     }
+
+    private void Start()
+    {
+        if (roleState != null)
+        {
+            ApplyPlayerRole(roleState.GetRole());
+        }
+    }
+    #region Testing for role setting
+    [ContextMenu("Test/Set Mouse Role")]
+    private void TestSetMouseRole()
+    {
+        if (roleState == null)
+        {
+            Debug.LogWarning("PlayerRoleState is missing.");
+            return;
+        }
+
+        roleState.SetRole(PlayerRole.Mouse);
+    }
+
+    [ContextMenu("Test/Set Cat Role")]
+    private void TestSetCatRole()
+    {
+        if (roleState == null)
+        {
+            Debug.LogWarning("PlayerRoleState is missing.");
+            return;
+        }
+
+        roleState.SetRole(PlayerRole.Cat);
+    }
+
+    [ContextMenu("Test/Reapply Current Role")]
+    private void TestReapplyCurrentRole()
+    {
+        if (roleState == null)
+        {
+            Debug.LogWarning("PlayerRoleState is missing.");
+            return;
+        }
+
+        ApplyPlayerRole(roleState.GetRole());
+    }
+    #endregion
+
     private void ApplyPlayerRole(PlayerRole role)
     {
         switch (role)
@@ -50,7 +94,6 @@ public class PlayerRoleApplier : MonoBehaviour
                 break;
         }
     }
-
     private void ApplyMouseRole()
     {
         if (movement != null)
@@ -64,10 +107,6 @@ public class PlayerRoleApplier : MonoBehaviour
             animator.runtimeAnimatorController = mouseAnimationController;
         }
 
-        if (spriteRenderer != null && mouseSprite != null)
-        {
-            spriteRenderer.sprite = mouseSprite;
-        }
     }
 
     private void ApplyCatRole()
@@ -81,11 +120,6 @@ public class PlayerRoleApplier : MonoBehaviour
         {
             animator.enabled = true;
             animator.runtimeAnimatorController = catAnimationController;
-        }
-
-        if (spriteRenderer != null && catSprite != null)
-        {
-            spriteRenderer.sprite = catSprite;
         }
 
         if (disguiseState != null && disguiseState.GetIsDisguised())
