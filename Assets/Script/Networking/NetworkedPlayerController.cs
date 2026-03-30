@@ -8,6 +8,8 @@ public class NetworkedPlayerController : NetworkBehaviour
     [Header("Player Movement Reference")]
     [SerializeField] private PlayerMovement playerMovement;
 
+    [SerializeField] private MouseAbilityController mouseAbility;
+
     //private PlayerInputNetworkData currentInputData;
     private NetworkVariable<PlayerInputNetworkData> syncedInputData = new (
         default, 
@@ -22,8 +24,13 @@ public class NetworkedPlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
+        syncedInputData.OnValueChanged += HandleSyncedInputChanged;
     }
 
+    public override void OnNetworkDespawn()
+    {
+        syncedInputData.OnValueChanged -= HandleSyncedInputChanged;
+    }
     private void Update()
     {
         // if (!IsOwner) return;
@@ -48,6 +55,14 @@ public class NetworkedPlayerController : NetworkBehaviour
 
         playerMovement.UpdateVisuals(syncedInputData.Value.InputDirection);
 
+    }
+
+    private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData curInput)
+    {
+        if (!IsServer) return;
+
+        // Call handle input from 
+        
     }
 
     void FixedUpdate()
