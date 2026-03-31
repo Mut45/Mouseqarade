@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 7427363037310488179}
   - component: {fileID: 6276427691374761291}
   - component: {fileID: 5144782781458730919}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Networked NPC
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 343362406
+  GlobalObjectIdHash: 1132199326
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -213,9 +213,9 @@ GameObject:
   - component: {fileID: 3059517550191541278}
   - component: {fileID: 4464862834427008815}
   - component: {fileID: 1627734208776211683}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Visual Component
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

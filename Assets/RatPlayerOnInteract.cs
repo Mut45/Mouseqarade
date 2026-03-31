@@ -22,7 +22,7 @@ public class RatPlayerOnInteract : MonoBehaviour
 
         if (Input.GetKeyDown(interactKey))
         {
-            roleApplier.ApplyRole(npcInRange.GetRole());
+            //roleApplier.ApplyRole(npcInRange.GetRole());
             OnRatInteracted?.Invoke();
         }
     }

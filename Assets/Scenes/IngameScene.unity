@@ -119,6 +119,28 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &71941528 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2654918430892036862, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+  m_PrefabInstance: {fileID: 6684289003895343528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd91a42f218bde46adaf0b5f9553e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseAbilityController
+--- !u!114 &71941531 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1779243336396233593, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+  m_PrefabInstance: {fileID: 6684289003895343528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17499e85c091e304d92d1c49afd68515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatAbilityController
 --- !u!1 &272333292
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,9 +761,6 @@ MonoBehaviour:
   npcPrefab: {fileID: 5144782781458730919, guid: 955180fc828aa5d4abb527a774582b79, type: 3}
   npcSpawnPoints:
   - {fileID: 560803283}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   npcSpawnCount: 2
   spawnRadius: 2.5
   blockedLayers:
@@ -26986,6 +27005,26 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 2308459089
       objectReference: {fileID: 0}
+    - target: {fileID: 3588964243904524426, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3588964243904524426, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
+    - target: {fileID: 3588964243904524426, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5092814776201962532, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: catAbility
+      value: 
+      objectReference: {fileID: 71941531}
+    - target: {fileID: 5092814776201962532, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: mouseAbility
+      value: 
+      objectReference: {fileID: 71941528}
     - target: {fileID: 5806363552358677840, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.70647

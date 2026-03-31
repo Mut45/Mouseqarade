@@ -9,6 +9,7 @@ public class NetworkedPlayerController : NetworkBehaviour
     [SerializeField] private PlayerMovement playerMovement;
 
     [SerializeField] private MouseAbilityController mouseAbility;
+    [SerializeField] private PlayerRoleState roleState;
 
     //private PlayerInputNetworkData currentInputData;
     private NetworkVariable<PlayerInputNetworkData> syncedInputData = new (
@@ -59,9 +60,18 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData curInput)
     {
+        Debug.Log("[Network] Synced input data changed.");
         if (!IsServer) return;
 
-        // Call handle input from 
+        switch (roleState.GetRole())
+        {
+            case PlayerRole.Mouse:
+                mouseAbility.HandleInput(prevInput, curInput);
+                break;
+            case PlayerRole.Cat:
+                //TODO: Implement cat input handler
+                break;
+        }
         
     }
 

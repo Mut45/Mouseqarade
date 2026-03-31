@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor.MPE;
 using UnityEditor.Recorder;
 using UnityEngine;
 
@@ -134,10 +135,6 @@ public class NetworkNPCController : NetworkBehaviour
     #endregion
 
     #region Role related
-    // public NPCRole GetRole()
-    // {
-    //     return role;
-    // }
 
     // public void SetRole(NPCRole newRole)
     // {
@@ -147,6 +144,10 @@ public class NetworkNPCController : NetworkBehaviour
     //     ApplyRoleVisuals();
     //     PickNewDirection(true);
     // }
+    public NPCRole GetRole()
+    {
+        return roleList[syncedRoleId.Value];
+    }
     public void SetRoleById(int id)
     {
         if (!IsServer) return;

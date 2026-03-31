@@ -89,7 +89,7 @@ public class PlayerDisguiseApplier : MonoBehaviour
 
     private void UpdateDisguiseApplication()
     {
-        if (roleState == null || disguiseState) return;
+        if (roleState == null || disguiseState == null) return;
 
         if (roleState.GetRole() != PlayerRole.Mouse) return; // early out if the player is cat
 
@@ -106,7 +106,6 @@ public class PlayerDisguiseApplier : MonoBehaviour
             RestoreToDefaultMouseForm();
             return;
         }
-
         NPCRole npcRole = npc.GetRole();
         if (npcRole == null)
         {

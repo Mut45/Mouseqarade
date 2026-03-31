@@ -85,22 +85,5 @@ public class PlayerDisguiseState : NetworkBehaviour
         isDisguised.Value = disguised;
         targetedNPCNOId.Value = disguised ? npcNetworkObjectId : 0;
     }
-    // public void ApplyDisguieFromNpc(NetworkNPCController npc)
-    // {
-    //     if (!IsServer) return;
-    //     if (npc == null) return;
-    //     IsDisguised.Value = true;
-    //     TargetedNPCNOId.Value = npc.NetworkObjectId;
-    // }
-
-    // public void CancelDisguise()
-    // {
-    //     if (!IsServer) return;
-
-    //     IsDisguised.Value = false;
-    //     TargetedNPCNOId.Value = 0;
-    // }
-
-
 
 }
