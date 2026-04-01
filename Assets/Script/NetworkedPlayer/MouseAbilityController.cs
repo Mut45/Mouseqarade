@@ -17,7 +17,6 @@ public class MouseAbilityController : NetworkBehaviour
         if (roleState.GetRole() != PlayerRole.Mouse) return;
         bool justPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
         if (!justPressed) return;
-        Debug.Log("[Player Disguise] Primary button pressed");
         TryUseDisguise();
 
     }

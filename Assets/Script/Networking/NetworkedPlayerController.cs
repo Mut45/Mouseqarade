@@ -5,13 +5,17 @@ using UnityEngine.Scripting.APIUpdating;
 [RequireComponent(typeof(PlayerMovement))]
 public class NetworkedPlayerController : NetworkBehaviour
 {
-    [Header("Player Movement Reference")]
+    [Header("Player Movement & Ability Reference")]
     [SerializeField] private PlayerMovement playerMovement;
-
     [SerializeField] private MouseAbilityController mouseAbility;
+    [SerializeField] private CatAbilityController catAbility;
     [SerializeField] private PlayerRoleState roleState;
 
-    //private PlayerInputNetworkData currentInputData;
+    private NetworkVariable<bool>  syncedMovementLock = new (
+        false,
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Server
+    );
     private NetworkVariable<PlayerInputNetworkData> syncedInputData = new (
         default, 
         NetworkVariableReadPermission.Everyone, 
@@ -26,21 +30,17 @@ public class NetworkedPlayerController : NetworkBehaviour
     {
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
         syncedInputData.OnValueChanged += HandleSyncedInputChanged;
+        syncedMovementLock.OnValueChanged += HandleMovementLockChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         syncedInputData.OnValueChanged -= HandleSyncedInputChanged;
+        syncedMovementLock.OnValueChanged -= HandleMovementLockChanged;
     }
+
     private void Update()
     {
-        // if (!IsOwner) return;
-
-        // PlayerInputNetworkData inputData = ReadLocalInput();
-        // playerMovement.UpdateVisuals(inputData.InputDirection);
-        // Debug.Log($"[CLIENT {OwnerClientId}] Input read: {inputData.InputDirection}");
-        
-        // SubmitInputDataViaServerRpc(inputData);
         if (IsOwner)
         {
             PlayerInputNetworkData inputData = ReadLocalInput();
@@ -58,7 +58,23 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     }
 
-    private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData curInput)
+    public void SetMovementLock(bool locked)
+    {
+        if (IsServer)
+        {
+            syncedMovementLock.Value = locked;
+        }
+    }
+
+    private void HandleMovementLockChanged(bool prevValue, bool currValue)
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.SetMovementLocked(currValue);            
+        }
+    }
+
+    private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
     {
         Debug.Log("[Network] Synced input data changed.");
         if (!IsServer) return;
@@ -66,10 +82,11 @@ public class NetworkedPlayerController : NetworkBehaviour
         switch (roleState.GetRole())
         {
             case PlayerRole.Mouse:
-                mouseAbility.HandleInput(prevInput, curInput);
+                mouseAbility.HandleInput(prevInput, currInput);
                 break;
             case PlayerRole.Cat:
                 //TODO: Implement cat input handler
+                catAbility.HandleInput(prevInput, currInput);
                 break;
         }
         
@@ -101,13 +118,6 @@ public class NetworkedPlayerController : NetworkBehaviour
         return inputData; 
     }
 
-    // [ServerRpc]
-    // private void SubmitInputDataViaServerRpc(PlayerInputNetworkData inputData)
-    // {
-    //     if (inputData.InputDirection.sqrMagnitude > 1.0f) inputData.InputDirection = inputData.InputDirection.normalized;
-
-    //     currentInputData = inputData;
-    // }
     [ServerRpc]
     private void SubmitInputDataViaServerRpc(PlayerInputNetworkData inputData)
     {

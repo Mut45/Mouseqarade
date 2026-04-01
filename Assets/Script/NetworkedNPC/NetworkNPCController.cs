@@ -135,15 +135,6 @@ public class NetworkNPCController : NetworkBehaviour
     #endregion
 
     #region Role related
-
-    // public void SetRole(NPCRole newRole)
-    // {
-    //     if (!IsServer) return; 
-
-    //     role = newRole;
-    //     ApplyRoleVisuals();
-    //     PickNewDirection(true);
-    // }
     public NPCRole GetRole()
     {
         return roleList[syncedRoleId.Value];

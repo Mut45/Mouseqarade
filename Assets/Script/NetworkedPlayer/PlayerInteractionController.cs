@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using Unity.Multiplayer.PlayMode;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -6,6 +9,17 @@ using UnityEngine.Scripting;
 public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private List<NetworkNPCController> npcsInRange = new ();
+    [SerializeField] private NetworkedPlayerController currentPlayerTarget;
+    public NetworkedPlayerController GetCurrentPlayerTarget()
+    {
+        return currentPlayerTarget;
+    }
+
+    public NetworkedPlayerController GetCurrentTargetPlayer()
+    {
+        return currentPlayerTarget;
+    }
+
     public bool TryGetCurrentNpcTarget(out NetworkNPCController targetNPC)
     {
         targetNPC = null;
@@ -27,6 +41,15 @@ public class PlayerInteractionController : MonoBehaviour
                 npcsInRange.Add(npc);
             }
         }
+
+        if (collision.CompareTag("Player"))
+        {
+            NetworkedPlayerController player = collision.GetComponent<NetworkedPlayerController>();
+            if (currentPlayerTarget == null)
+            {
+                currentPlayerTarget = player;
+            }
+        }
         
     }
 
@@ -37,6 +60,11 @@ public class PlayerInteractionController : MonoBehaviour
             NetworkNPCController npc = collision.GetComponent<NetworkNPCController>();
             npcsInRange.Remove(npc);
         }
-    }
 
+        if (collision.CompareTag("Player"))
+        {
+            currentPlayerTarget = null;
+        }
+
+    }
 }

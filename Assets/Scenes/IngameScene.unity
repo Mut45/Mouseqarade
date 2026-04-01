@@ -141,6 +141,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17499e85c091e304d92d1c49afd68515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatAbilityController
+--- !u!114 &122576860 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6478295790469506346, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+  m_PrefabInstance: {fileID: 6684289003895343528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b813aa2a89ab4e147bc9baf85e58b29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkedPlayerController
 --- !u!1 &272333292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1357,6 +1368,28 @@ Transform:
   - {fileID: 1000194734}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900704678 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2404001352304869495, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+  m_PrefabInstance: {fileID: 6684289003895343528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c60087aef0a10f46867276fb17083e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractionController
+--- !u!114 &900704682 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5092814776201962532, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+  m_PrefabInstance: {fileID: 6684289003895343528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095207bc49b18c04ca1c6ab7b795d730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRoleState
 --- !u!1 &947006510
 GameObject:
   m_ObjectHideFlags: 0
@@ -26989,6 +27022,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 107189466024803681, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: roleState
+      value: 
+      objectReference: {fileID: 900704682}
+    - target: {fileID: 107189466024803681, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: inGameManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 107189466024803681, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 122576860}
+    - target: {fileID: 107189466024803681, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: thumbSpinnerPrefab
+      value: 
+      objectReference: {fileID: 2923591379303530748, guid: c19b255ecb1354bd49488b7820290cc4, type: 3}
+    - target: {fileID: 107189466024803681, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: interactionController
+      value: 
+      objectReference: {fileID: 900704678}
     - target: {fileID: 2295270238922102630, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
       propertyPath: m_Name
       value: Networked Player
@@ -26997,6 +27050,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2404001352304869495, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
+      propertyPath: currentPlayerTarget
+      value: 
+      objectReference: {fileID: 122576860}
     - target: {fileID: 3456519051141053592, guid: 0ba6e9a99d1fab14894a59665764f0db, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 32639595
