@@ -10,6 +10,7 @@ public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private List<NetworkNPCController> npcsInRange = new ();
     [SerializeField] private NetworkedPlayerController currentPlayerTarget;
+    [SerializeField] private NetworkClockController currentClockTarget;
     public NetworkedPlayerController GetCurrentPlayerTarget()
     {
         return currentPlayerTarget;
@@ -18,6 +19,12 @@ public class PlayerInteractionController : MonoBehaviour
     public NetworkedPlayerController GetCurrentTargetPlayer()
     {
         return currentPlayerTarget;
+    }
+
+    public bool TryGetCurrentClockTarget(out NetworkClockController targetClock)
+    {
+        targetClock = currentClockTarget;
+        return targetClock != null;
     }
 
     public bool TryGetCurrentNpcTarget(out NetworkNPCController targetNPC)
@@ -50,6 +57,15 @@ public class PlayerInteractionController : MonoBehaviour
                 currentPlayerTarget = player;
             }
         }
+
+        if (collision.CompareTag("Clock"))
+        {
+            NetworkClockController networkClock = collision.GetComponent<NetworkClockController>();
+            if (networkClock != null && currentClockTarget == null)
+            {
+                currentClockTarget = networkClock;
+            }
+        }
         
     }
 
@@ -63,8 +79,21 @@ public class PlayerInteractionController : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            currentPlayerTarget = null;
+            NetworkedPlayerController player = collision.GetComponent<NetworkedPlayerController>();
+            if (currentPlayerTarget == player)
+            {
+                currentPlayerTarget = null;
+            }
+            
         }
 
+        if (collision.CompareTag("Clock"))
+        {
+            NetworkClockController clock = collision.GetComponent<NetworkClockController>();
+            if (currentClockTarget == clock)
+            {
+                currentClockTarget = null;
+            }
+        }
     }
 }

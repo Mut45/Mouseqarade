@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
@@ -26,7 +27,7 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         if (roleState == null) roleState = GetComponent<PlayerRoleState>();
         if (disguiseState == null) disguiseState = GetComponent<PlayerDisguiseState>();
     }
-
+    
     private void OnEnable()
     {
         if (roleState != null)
@@ -46,9 +47,38 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
             buffState.OnRuntimeStateChanged += UpdateMovementSpeed;
         }
 
-    } 
+    }
+
+    private void OnDisable()
+    {
+        if (roleState != null)
+        {
+            roleState.OnRoleChanged -= HandleRoleChanged;
+        }
+
+        if (disguiseState != null)
+        {
+            disguiseState.OnDisguiseChanged -= HandleDisguiseChanged;
+        }
+
+        if (buffState != null)
+        {
+            buffState.OnCatBuffsChanged -= UpdateMovementSpeed;
+            buffState.OnMouseBuffsChanged -= UpdateMovementSpeed;
+            buffState.OnRuntimeStateChanged -= UpdateMovementSpeed;
+        }
+    }
+    private void Start()
+    {
+        UpdateMovementSpeed();
+    }
     #region Movement speed
     private void HandleRoleChanged(PlayerRole role)
+    {
+        UpdateMovementSpeed();
+    }
+
+    private void HandleDisguiseChanged(bool isDisguised, ulong NOId)
     {
         UpdateMovementSpeed();
     }
@@ -70,19 +100,52 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
             return catBaseMoveSpeed;
         }
 
+        float result = mouseBaseMoveSpeed;
+        
+        if (disguiseState == null || !disguiseState.GetIsDisguised())
+        {
+            return result;
+        }
 
-        return 0f;
+        // Mouse disguised
+        ulong npcNOId = disguiseState.GetTargetedNPCNOId();
+
+        if (!NetworkLookUp.TryGetNetworkNpc(NetworkManager.Singleton, npcNOId, out NetworkNPCController npc) || npc == null)
+        {
+            return result;
+        }
+
+        NPCRole npcRole = npc.GetRole();
+        if (npcRole == null)
+        {
+            return result;
+        }
+
+        return npcRole.moveSpeed;
     }
 
     private float GetBuffMoveSpeedBonus()
     {
-        return 0f;
+        if (buffState == null || roleState == null) return 0f;
+        if (roleState.GetRole() != PlayerRole.Cat) return 0f;
+
+        float bonus = 0f;
+
+        if (buffState.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_Permanent))
+        {
+            bonus += catPermanentMoveSpeedBonus;
+        }
+
+        if (buffState.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_OnFail_Temporary)
+            && buffState.IsCatTempSpeedActive)
+        {
+            bonus += catTemporaryMoveSpeedBonus;
+        }
+
+        return bonus;
     }
     #endregion
 
-    private void HandleDisguiseChanged(bool isDisguised, ulong NOId)
-    {
-        
-    }
+
 
 }

@@ -17,11 +17,12 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     [Header("Clock object reference")]
     [SerializeField] private NetworkClockController clockController;
 
-
+    [Header("Debug Test")]
+    [SerializeField] private PlayerRole debugRole = PlayerRole.Cat;
+    [SerializeField] private BuffCardEffectId debugEffectId = BuffCardEffectId.CatMoveSpeed_Permanent;
 
     private Coroutine catTempSpeedRoutine;
     private Coroutine redLightGreenLightRoutine;
-
 
     public static NetworkRoleBuffSystem Instance { get; private set; }
 

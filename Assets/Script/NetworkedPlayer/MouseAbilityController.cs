@@ -15,9 +15,20 @@ public class MouseAbilityController : NetworkBehaviour
     {
         if (!IsServer) return;
         if (roleState.GetRole() != PlayerRole.Mouse) return;
-        bool justPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
-        if (!justPressed) return;
-        TryUseDisguise();
+        bool primaryJustPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
+        if (primaryJustPressed)
+        {
+            TryUseDisguise();
+        }
+
+        bool interactJustPressed = currInput.InteractPressed && !prevInput.InteractPressed;
+        if (interactJustPressed)
+        {
+            if (interactionController.TryGetCurrentClockTarget(out NetworkClockController clock))
+            {
+                clock.TryInteract(NetworkObject);
+            }
+        }
 
     }
 
