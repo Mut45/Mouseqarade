@@ -14,7 +14,7 @@ public class NetworkNPCController : NetworkBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float changeTimer; // how long until change direction
-
+    [SerializeField] private float movementSpeedMultiplier = 1f;
     private NetworkVariable<int> syncedRoleId = new(
         -1,
         NetworkVariableReadPermission.Everyone,
@@ -55,9 +55,6 @@ public class NetworkNPCController : NetworkBehaviour
         NPCRole role = GetCurrentRole();
         if (role == null || syncedPaused.Value) return;
 
-        // UpdateAnimator();
-        // UpdateSpriteFlip();
-
         changeTimer -= Time.deltaTime;
         if (changeTimer <= 0f)
             PickNewDirection(false);
@@ -66,10 +63,14 @@ public class NetworkNPCController : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsServer) return;
+
         NPCRole role = GetCurrentRole();
         if (role == null || syncedPaused.Value) return;
+        
         Vector2 currentDir = syncedDir.Value;
-        Vector2 newPos = rb.position + currentDir * role.moveSpeed * Time.fixedDeltaTime;
+        float moveSpeed = role.moveSpeed * movementSpeedMultiplier;
+        
+        Vector2 newPos = rb.position + currentDir * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(newPos);
     }
 
@@ -92,6 +93,21 @@ public class NetworkNPCController : NetworkBehaviour
         return roleList[index];
     }
 
+    #region Exposed functions to modify movement speed
+    public void SetMovementSpeedMultiplier(float multiplier)
+    {
+        movementSpeedMultiplier = Mathf.Max(0f, multiplier);
+    }
+
+    public float GetCurrentMoveSpeed()
+    {
+        NPCRole role = GetCurrentRole();
+        if (role == null) return 0f;
+
+        return role.moveSpeed * movementSpeedMultiplier;
+    }
+
+    #endregion
     #region NetworkVariable On Change
     private void OnRoleIdChange(int oldValue, int newValue)
     {

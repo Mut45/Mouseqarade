@@ -11,6 +11,7 @@ public class NetworkClockController : NetworkBehaviour
     [SerializeField] private bool requirePlayerInTrigger = true;
 
     [SerializeField] private List<ulong> playersNOIdInRange;
+    
     public bool TryInteract(NetworkObject interactor)
     {
         if (!IsServer) return false;

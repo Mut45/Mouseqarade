@@ -11,7 +11,10 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private PlayerRoleState roleState;
     [SerializeField] private PlayerDisguiseState disguiseState;
-    [SerializeField] private NetworkRoleBuffState buffState;
+    //[SerializeField] private NetworkRoleBuffState buffState;
+
+    [Header("Clock State Reference")]
+    [SerializeField] private float clockBoostMultiplier = 1.0f;
 
     [Header("Player base speed")]
     [SerializeField] private float mouseBaseMoveSpeed = 5.0f;
@@ -40,11 +43,16 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
             disguiseState.OnDisguiseChanged += HandleDisguiseChanged;
         }
 
-        if (buffState != null)
+        if (NetworkRoleBuffState.Instance != null)
         {
-            buffState.OnCatBuffsChanged += UpdateMovementSpeed;
-            buffState.OnMouseBuffsChanged += UpdateMovementSpeed;
-            buffState.OnRuntimeStateChanged += UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnCatBuffsChanged += UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnMouseBuffsChanged += UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnRuntimeStateChanged += UpdateMovementSpeed;
+        }
+
+        if (InGameManager.Instance != null)
+        {
+            InGameManager.Instance.OnClockBoostMultiplierChanged += UpdateMovementSpeedByMultiplier;
         }
 
     }
@@ -61,12 +69,14 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
             disguiseState.OnDisguiseChanged -= HandleDisguiseChanged;
         }
 
-        if (buffState != null)
+        if (NetworkRoleBuffState.Instance != null)
         {
-            buffState.OnCatBuffsChanged -= UpdateMovementSpeed;
-            buffState.OnMouseBuffsChanged -= UpdateMovementSpeed;
-            buffState.OnRuntimeStateChanged -= UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnCatBuffsChanged -= UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnMouseBuffsChanged -= UpdateMovementSpeed;
+            NetworkRoleBuffState.Instance.OnRuntimeStateChanged -= UpdateMovementSpeed;
         }
+
+
     }
     private void Start()
     {
@@ -83,6 +93,17 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         UpdateMovementSpeed();
     }
 
+    private void UpdateMovementSpeedByMultiplier(float multiplier)
+    {
+        if (movement == null || roleState == null) return;
+
+        float finalSpeed = GetBaseSpeedFromRoleAndDisguise();
+        finalSpeed += GetBuffMoveSpeedBonus();
+
+        finalSpeed *= multiplier;
+
+        movement.SetMovementSpeed(finalSpeed);
+    }
     private void UpdateMovementSpeed()
     {
         if (movement == null || roleState == null) return;
@@ -126,18 +147,18 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
 
     private float GetBuffMoveSpeedBonus()
     {
-        if (buffState == null || roleState == null) return 0f;
+        if (NetworkRoleBuffState.Instance == null || roleState == null) return 0f;
         if (roleState.GetRole() != PlayerRole.Cat) return 0f;
 
         float bonus = 0f;
 
-        if (buffState.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_Permanent))
+        if (NetworkRoleBuffState.Instance.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_Permanent))
         {
             bonus += catPermanentMoveSpeedBonus;
         }
 
-        if (buffState.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_OnFail_Temporary)
-            && buffState.IsCatTempSpeedActive)
+        if (NetworkRoleBuffState.Instance.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_OnFail_Temporary)
+            && NetworkRoleBuffState.Instance.IsCatTempSpeedActive)
         {
             bonus += catTemporaryMoveSpeedBonus;
         }
@@ -145,7 +166,5 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         return bonus;
     }
     #endregion
-
-
 
 }

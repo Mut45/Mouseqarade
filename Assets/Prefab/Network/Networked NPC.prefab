@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7427363037310488179}
   - component: {fileID: 6276427691374761291}
   - component: {fileID: 5144782781458730919}
+  - component: {fileID: 108608355949404248}
   m_Layer: 3
   m_Name: Networked NPC
   m_TagString: NPC
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1132199326
+  GlobalObjectIdHash: 2539468331
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -202,6 +203,21 @@ MonoBehaviour:
   animator: {fileID: 1627734208776211683}
   spriteRenderer: {fileID: 4464862834427008815}
   changeTimer: 0
+  movementSpeedMultiplier: 1
+--- !u!114 &108608355949404248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3760663311987657144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 343a0be8d1d10634e9039c5aa2e473ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkNpcMovementBuffApplier
+  npcController: {fileID: 5144782781458730919}
+  clockSpeedMultiplier: 0
 --- !u!1 &8265960680935255905
 GameObject:
   m_ObjectHideFlags: 0

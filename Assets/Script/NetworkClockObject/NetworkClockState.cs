@@ -5,13 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(NetworkObject))]
 public class NetworkClockState : NetworkBehaviour
 {
-    private NetworkVariable<bool> isClockActive = new(
+    [SerializeField] private NetworkVariable<bool> isClockActive = new(
         true,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
 
-    private NetworkVariable<bool> isBoostActive = new(
+    [SerializeField] private NetworkVariable<bool> isBoostActive = new(
         false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server

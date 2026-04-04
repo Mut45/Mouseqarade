@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 2404001352304869495}
   - component: {fileID: 4475275466946252400}
   - component: {fileID: 107189466024803681}
+  - component: {fileID: 691375913522796305}
   m_Layer: 6
   m_Name: Networked Player
   m_TagString: Player
@@ -102,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 32639595
+  GlobalObjectIdHash: 2255119129
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -342,6 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractionController
   npcsInRange: []
   currentPlayerTarget: {fileID: 6478295790469506346}
+  currentClockTarget: {fileID: 0}
 --- !u!61 &4475275466946252400
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -407,6 +409,26 @@ MonoBehaviour:
   lockDuration: 5
   thumbSpinnerPrefab: {fileID: 2923591379303530748, guid: c19b255ecb1354bd49488b7820290cc4, type: 3}
   popupOffset: {x: 0, y: 1.2, z: 0}
+--- !u!114 &691375913522796305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295270238922102630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4246929ad2b46c34bbc9758f2ced0c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerMovementApplier
+  movement: {fileID: 7173084272521007188}
+  roleState: {fileID: 5092814776201962532}
+  disguiseState: {fileID: 8208071018651558396}
+  clockBoostMultiplier: 1
+  mouseBaseMoveSpeed: 5
+  catBaseMoveSpeed: 5
+  catPermanentMoveSpeedBonus: 1
+  catTemporaryMoveSpeedBonus: 2
 --- !u!1 &5912892272298324491
 GameObject:
   m_ObjectHideFlags: 0
