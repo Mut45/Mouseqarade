@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 4475275466946252400}
   - component: {fileID: 107189466024803681}
   - component: {fileID: 691375913522796305}
+  - component: {fileID: -9009768186066795680}
   m_Layer: 6
   m_Name: Networked Player
   m_TagString: Player
@@ -103,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2255119129
+  GlobalObjectIdHash: 2308459089
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -429,6 +430,22 @@ MonoBehaviour:
   catBaseMoveSpeed: 5
   catPermanentMoveSpeedBonus: 1
   catTemporaryMoveSpeedBonus: 2
+--- !u!114 &-9009768186066795680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295270238922102630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12fa43dfc3b0b8440bc1d98120d66f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatBuffChoiceController
+  ShowTopMostFoldoutHeaderGroup: 1
+  roleState: {fileID: 5092814776201962532}
+  playerController: {fileID: 6478295790469506346}
+  buffCardPanel: {fileID: 0}
 --- !u!1 &5912892272298324491
 GameObject:
   m_ObjectHideFlags: 0

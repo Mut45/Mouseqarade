@@ -22,7 +22,7 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
 
     [Header("Buff Bonuses")]
     [SerializeField] private float catPermanentMoveSpeedBonus = 1.0f;
-    [SerializeField] private float catTemporaryMoveSpeedBonus = 2.0f;
+    [SerializeField] private float catTemporaryMoveSpeedBonus = 4.0f;
 
     private void Awake()
     {

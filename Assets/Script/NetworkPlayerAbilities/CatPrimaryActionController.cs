@@ -1,5 +1,6 @@
 
 
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class CatPrimaryActionController : NetworkBehaviour
     [Header("Resolving Target VFX")]
     [SerializeField] private ThumbSpinner thumbSpinnerPrefab;
     [SerializeField] private Vector3 popupOffset = new Vector3(0f, 1.2f, 0f);
+
+    public event Action<CatPrimaryActionController> OnFailedCatchNpc;
     public void TryPrimaryAction()
     {
         if (!IsOwner) return;
@@ -104,6 +107,7 @@ public class CatPrimaryActionController : NetworkBehaviour
             npcTarget.ResumeMovement();
         }
         
+        OnFailedCatchNpc?.Invoke(this);
     }
 
     [ClientRpc]
