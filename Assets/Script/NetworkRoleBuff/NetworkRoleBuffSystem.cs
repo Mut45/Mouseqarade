@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
 
     [Header("Clock object reference")]
     [SerializeField] private NetworkClockController clockController;
+
+    [Header("Registered cat primary action controller")]
+    private readonly HashSet<CatPrimaryActionController> registeredCatControllers = new();
 
     [Header("Debug Test")]
     [SerializeField] private PlayerRole debugRole = PlayerRole.Cat;
@@ -39,6 +43,44 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
         if (roleBuffState == null) roleBuffState = GetComponent<NetworkRoleBuffState>();
     }
 
+    // #region Registering the cat player's primary action controller in the scene
+    // public void RegisterCatController(CatPrimaryActionController controller)
+    // {
+    //     if (!IsServer) return;
+    //     if (controller == null) return;
+    //     if (!registeredCatControllers.Add(controller)) return;
+
+    //     controller.OnFailedCatchNpc += HandleFailedCatchNpc;
+    // }
+
+    // public void UnregisterCatController(CatPrimaryActionController controller)
+    // {
+    //     if (controller == null) return;
+    //     if (!registeredCatControllers.Remove(controller)) return;
+
+    //     controller.OnFailedCatchNpc -= HandleFailedCatchNpc;
+    // }
+
+    // private void HandleFailedCatchNpc(CatPrimaryActionController source)
+    // {
+    //     if (!IsServer) return;
+    //     if (source == null) return;
+    //     if (NetworkRoleBuffState.Instance == null) return;
+
+    //     PlayerRoleState roleState = source.GetComponent<PlayerRoleState>();
+    //     if (roleState == null || roleState.GetRole() != PlayerRole.Cat) return;
+
+    //     if (!NetworkRoleBuffState.Instance.HasBuffForRole(
+    //         PlayerRole.Cat,
+    //         BuffCardEffectId.CatMoveSpeed_OnFail_Temporary))
+    //     {
+    //         return;
+    //     }
+
+    //     double endTime = NetworkManager.Singleton.ServerTime.Time + catTempSpeedDuration;
+    //     NetworkRoleBuffState.Instance.SetCatTempSpeedFromServer(true, endTime);
+    // }
+    // #endregion
 
     #region Acquire the buff effect for role
     public void AcquireEffectForRole(PlayerRole role, BuffCardEffectId effectId)
@@ -107,7 +149,7 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     #endregion
 
     #region Cat failed to catch mouse sequence
-    public void NotifyCatFialedCatch()
+    public void NotifyCatFailedCatch()
     {
         if (!IsServer)
         {

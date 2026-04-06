@@ -1,28 +1,28 @@
-
-
 using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+
 public class CatPrimaryActionController : NetworkBehaviour
 {
+    public event Action<CatPrimaryActionController> OnFailedCatchNpc;
+
     [SerializeField] private PlayerRoleState roleState;
     [SerializeField] private NetworkedPlayerController playerController;
     [SerializeField] private PlayerInteractionController interactionController;
     [SerializeField] private float lockDuration = 5.0f;
-    
+
     [Header("Resolving Target VFX")]
     [SerializeField] private ThumbSpinner thumbSpinnerPrefab;
     [SerializeField] private Vector3 popupOffset = new Vector3(0f, 1.2f, 0f);
 
-    public event Action<CatPrimaryActionController> OnFailedCatchNpc;
     public void TryPrimaryAction()
     {
         if (!IsOwner) return;
-        
+
         if (IsServer)
         {
-            ExecuteCatchFromServer();            
+            ExecuteCatchFromServer();
         }
         else
         {
@@ -35,10 +35,10 @@ public class CatPrimaryActionController : NetworkBehaviour
     {
         ExecuteCatchFromServer();
     }
+
     private void ExecuteCatchFromServer()
     {
         if (!IsServer) return;
-
         if (roleState == null || roleState.GetRole() != PlayerRole.Cat) return;
 
         NetworkedPlayerController currentPlayerTarget = interactionController.GetCurrentPlayerTarget();
@@ -56,25 +56,25 @@ public class CatPrimaryActionController : NetworkBehaviour
         {
             ExecuteCatchNpc(currentNpcTarget);
         }
-
     }
 
     private void ExecuteCatchMouse(NetworkedPlayerController mouseTarget)
     {
         if (mouseTarget == null) return;
+
         playerController.SetMovementLock(true);
         mouseTarget.SetMovementLock(true);
-        ShowThumbSpinnerViaClientRpc(mouseTarget.NetworkObjectId, isTargetMouse: true);
+        ShowThumbSpinnerViaClientRpc(mouseTarget.NetworkObjectId, true);
         StartCoroutine(FinishCatchMouseAfterDelay(mouseTarget));
-
     }
 
     private void ExecuteCatchNpc(NetworkNPCController npcTarget)
     {
         if (npcTarget == null) return;
+
         playerController.SetMovementLock(true);
         npcTarget.PauseMovement();
-        ShowThumbSpinnerViaClientRpc(npcTarget.NetworkObjectId, isTargetMouse: false);
+        ShowThumbSpinnerViaClientRpc(npcTarget.NetworkObjectId, false);
         StartCoroutine(FinishCatchNpcAfterDelay(npcTarget));
     }
 
@@ -91,9 +91,8 @@ public class CatPrimaryActionController : NetworkBehaviour
 
         if (InGameManager.Instance != null)
         {
-            Debug.Log("[CatPrimaryAction] Mouse caught");
             InGameManager.Instance.OnMouseBeingCaught();
-        } 
+        }
     }
 
     private IEnumerator FinishCatchNpcAfterDelay(NetworkNPCController npcTarget)
@@ -106,24 +105,24 @@ public class CatPrimaryActionController : NetworkBehaviour
         {
             npcTarget.ResumeMovement();
         }
-        
-        OnFailedCatchNpc?.Invoke(this);
+
+        if (NetworkRoleBuffSystem.Instance != null)
+        {
+            NetworkRoleBuffSystem.Instance.NotifyCatFailedCatch();
+        }
     }
 
     [ClientRpc]
     private void ShowThumbSpinnerViaClientRpc(ulong targetNetworkObjectId, bool isTargetMouse)
     {
-        if (thumbSpinnerPrefab != null)
+        if (thumbSpinnerPrefab != null &&
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject targetNO))
         {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject targetNO))
-            {
-                Transform target = targetNO.transform;
-                var popup = Instantiate(thumbSpinnerPrefab, target);
-                popup.transform.localPosition = popupOffset;
-                popup.transform.localRotation = Quaternion.identity;
-                popup.Init(isTargetMouse);
-            }
-
+            Transform target = targetNO.transform;
+            var popup = Instantiate(thumbSpinnerPrefab, target);
+            popup.transform.localPosition = popupOffset;
+            popup.transform.localRotation = Quaternion.identity;
+            popup.Init(isTargetMouse);
         }
     }
 }
