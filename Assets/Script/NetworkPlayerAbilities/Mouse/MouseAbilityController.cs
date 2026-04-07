@@ -10,7 +10,6 @@ public class MouseAbilityController : NetworkBehaviour
     [SerializeField] private PlayerDisguiseState disguiseState;
     [SerializeField] private PlayerInteractionController interactionController;
 
-
     public void HandleInput(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
     {
         if (!IsServer) return;

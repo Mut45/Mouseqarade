@@ -7,7 +7,7 @@ public class CatAbilityController : NetworkBehaviour
 {
     [SerializeField] private CatPrimaryActionController primaryActionController;
     [SerializeField] private PlayerRoleState roleState;
-
+    [SerializeField] private PlayerInteractionController interactionController;
     void Awake()
     {
         if (roleState == null) roleState = GetComponent<PlayerRoleState>();
@@ -20,9 +20,19 @@ public class CatAbilityController : NetworkBehaviour
 
         if (roleState == null || roleState.GetRole() != PlayerRole.Cat) return;
 
-        bool justPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
-        if (!justPressed) return;
+        bool primaryJustPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
+        if (primaryJustPressed)
+        {
+            primaryActionController.TryPrimaryAction();
+        }
 
-        primaryActionController.TryPrimaryAction();
+        bool interactJustPressed = currInput.InteractPressed && !prevInput.InteractPressed;
+        if (interactJustPressed)
+        {
+            if (interactionController.TryGetCurrentClockTarget(out NetworkClockController clock))
+            {
+                clock.TryInteract(NetworkObject);
+            }
+        }
     }
 }

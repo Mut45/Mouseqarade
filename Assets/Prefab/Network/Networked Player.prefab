@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2308459089
+  GlobalObjectIdHash: 32639595
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -282,6 +282,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   primaryActionController: {fileID: 107189466024803681}
   roleState: {fileID: 5092814776201962532}
+  interactionController: {fileID: 2404001352304869495}
 --- !u!114 &6715580145574261107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,7 +446,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   roleState: {fileID: 5092814776201962532}
   playerController: {fileID: 6478295790469506346}
-  buffCardPanel: {fileID: 0}
 --- !u!1 &5912892272298324491
 GameObject:
   m_ObjectHideFlags: 0
