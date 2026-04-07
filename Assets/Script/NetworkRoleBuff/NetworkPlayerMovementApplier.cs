@@ -52,7 +52,7 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
 
         if (InGameManager.Instance != null)
         {
-            InGameManager.Instance.OnClockBoostMultiplierChanged += UpdateMovementSpeedByMultiplier;
+            InGameManager.Instance.OnClockBoostMultiplierChanged += HandleClockBoostMultiplierChanged;
         }
 
     }
@@ -76,6 +76,10 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
             NetworkRoleBuffState.Instance.OnRuntimeStateChanged -= UpdateMovementSpeed;
         }
 
+        if (InGameManager.Instance != null)
+        {
+            InGameManager.Instance.OnClockBoostMultiplierChanged -= HandleClockBoostMultiplierChanged;
+        }
 
     }
     private void Start()
@@ -93,17 +97,11 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         UpdateMovementSpeed();
     }
 
-    private void UpdateMovementSpeedByMultiplier(float multiplier)
+    private void HandleClockBoostMultiplierChanged(float multiplier)
     {
-        if (movement == null || roleState == null) return;
-
-        float finalSpeed = GetBaseSpeedFromRoleAndDisguise();
-        finalSpeed += GetBuffMoveSpeedBonus();
-
-        finalSpeed *= multiplier;
-
-        movement.SetMovementSpeed(finalSpeed);
+        UpdateMovementSpeed();
     }
+
     private void UpdateMovementSpeed()
     {
         if (movement == null || roleState == null) return;
@@ -111,6 +109,13 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         float finalSpeed = GetBaseSpeedFromRoleAndDisguise();
         finalSpeed += GetBuffMoveSpeedBonus();
 
+        float clockMultiplier = 1f;
+        if (InGameManager.Instance != null)
+        {
+            clockMultiplier = InGameManager.Instance.GetClockBoostMultiplier();
+        }
+        Debug.Log("[NetworkPlayerMovementApplier] The current clock boost multiplier is:" + clockMultiplier);
+        finalSpeed *= clockMultiplier;
         movement.SetMovementSpeed(finalSpeed);
     }
     
