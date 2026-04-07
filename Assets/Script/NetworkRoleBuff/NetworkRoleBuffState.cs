@@ -37,14 +37,14 @@ public class NetworkRoleBuffState : NetworkBehaviour
     );
 
     // 2. Disable clock buff card effect
-    private NetworkVariable<bool> isClockDisabled = new(
+    [SerializeField] private NetworkVariable<bool> isClockDisabled = new(
         false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
 
     // 3. Red light green light buff card effect
-    private NetworkVariable<bool> isRedLightGreenLightActive = new(
+    [SerializeField] private NetworkVariable<bool> isRedLightGreenLightActive = new(
         false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server

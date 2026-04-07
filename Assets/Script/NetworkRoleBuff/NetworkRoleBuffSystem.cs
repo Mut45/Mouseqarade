@@ -8,7 +8,6 @@ using UnityEngine;
 public class NetworkRoleBuffSystem : NetworkBehaviour
 {
     [Header("Buff State Reference")]
-    [SerializeField] NetworkRoleBuffState roleBuffState;
     
     [Header("Buff effect parameters config")]
     [SerializeField] private float catTempSpeedDuration = 5.0f;
@@ -40,7 +39,6 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
 
         Instance = this;
 
-        if (roleBuffState == null) roleBuffState = GetComponent<NetworkRoleBuffState>();
     }
 
     // #region Registering the cat player's primary action controller in the scene
@@ -103,15 +101,12 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     private void AcquireEffectForRoleFromServer(PlayerRole role, BuffCardEffectId effectId)
     {
         if (!IsServer) return;
-
-        if (roleBuffState == null) return;
-
-        roleBuffState.AddBuffForRoleServer(role, effectId);
-
+        if (NetworkRoleBuffState.Instance == null) return;
+        NetworkRoleBuffState.Instance.AddBuffForRoleServer(role, effectId);
         switch (effectId)
         {
             case BuffCardEffectId.DisableClock:
-                roleBuffState.SetClockDisabledFromServer(true);
+                NetworkRoleBuffState.Instance.SetClockDisabledFromServer(true);
                 break;
 
             case BuffCardEffectId.RedLightGreenLight:
@@ -139,11 +134,11 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
         double startTime = NetworkManager.ServerTime.Time + redLightGreenLightDelay;
         double endTime = startTime + redLightGreenLightDuration;
 
-        roleBuffState.SetRedLightGreenLightFromServer(true, endTime);
+        NetworkRoleBuffState.Instance.SetRedLightGreenLightFromServer(true, endTime);
 
         yield return new WaitForSeconds(redLightGreenLightDelay + redLightGreenLightDuration);
 
-        roleBuffState.SetRedLightGreenLightFromServer(false, 0);
+        NetworkRoleBuffState.Instance.SetRedLightGreenLightFromServer(false, 0);
         redLightGreenLightRoutine = null;
     }
     #endregion
@@ -168,9 +163,9 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (roleBuffState == null) return;
+        if (NetworkRoleBuffState.Instance == null) return;
 
-        if (!roleBuffState.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_OnFail_Temporary)) return;
+        if (!NetworkRoleBuffState.Instance.HasBuffForRole(PlayerRole.Cat, BuffCardEffectId.CatMoveSpeed_OnFail_Temporary)) return;
     
         if (catTempSpeedRoutine != null)
         {
@@ -183,11 +178,11 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     private IEnumerator CatTempSpeedRoutine()
     {
         double endTime = NetworkManager.ServerTime.Time + catTempSpeedDuration;
-        roleBuffState.SetCatTempSpeedFromServer(true, endTime);
+        NetworkRoleBuffState.Instance.SetCatTempSpeedFromServer(true, endTime);
 
         yield return new WaitForSeconds(catTempSpeedDuration);
 
-        roleBuffState.SetCatTempSpeedFromServer(false, 0);
+        NetworkRoleBuffState.Instance.SetCatTempSpeedFromServer(false, 0);
         catTempSpeedRoutine = null;
     }
     #endregion

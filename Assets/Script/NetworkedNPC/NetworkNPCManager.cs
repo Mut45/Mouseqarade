@@ -21,7 +21,6 @@ public class NetworkNPCManager : MonoBehaviour
             return;
         }
         Instance = this;
-        // t = testDuration;
     }
 
     public void Register(NetworkNPCController npc)
@@ -67,6 +66,7 @@ public class NetworkNPCManager : MonoBehaviour
             RandomizeRoles();
         }
     }
+
     public void RandomizeRoles()
     {
         if (!NetworkManager.Singleton.IsServer) return; // using the NetworkManager since I want to make this class stay as MonoBehaviour

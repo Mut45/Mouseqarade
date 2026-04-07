@@ -8,8 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class NetworkNPCController : NetworkBehaviour
 {
-    
-    // [SerializeField] private NPCRole role;
     [SerializeField] private NPCRole[] roleList;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -31,15 +29,14 @@ public class NetworkNPCController : NetworkBehaviour
         NetworkVariableWritePermission.Server
 
     );
-    // private Vector2 currentDir;
     private Vector2 cachedDir;
-    // private bool isPaused;
     private Rigidbody2D rb;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();                                                         
     }
+
     public override void OnNetworkSpawn()
     {
         syncedRoleId.OnValueChanged += OnRoleIdChange;
@@ -49,6 +46,7 @@ public class NetworkNPCController : NetworkBehaviour
         if (roleList != null) ApplyRoleVisuals();
         UpdateVisualState();
     }
+
     private void Update()
     {
         if (!IsServer) return;
@@ -59,7 +57,7 @@ public class NetworkNPCController : NetworkBehaviour
         if (changeTimer <= 0f)
             PickNewDirection(false);
     }
-     
+
     private void FixedUpdate()
     {
         if (!IsServer) return;
@@ -108,6 +106,7 @@ public class NetworkNPCController : NetworkBehaviour
     }
 
     #endregion
+
     #region NetworkVariable On Change
     private void OnRoleIdChange(int oldValue, int newValue)
     {
@@ -125,7 +124,7 @@ public class NetworkNPCController : NetworkBehaviour
         UpdateVisualState();
     }
     #endregion
-    
+
     #region Visual State Update
     private void UpdateVisualState()
     {

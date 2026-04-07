@@ -1227,13 +1227,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 538390815}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.76706, y: 0.89628, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.27455, y: 0.87758, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2104255673}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 920264772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &538390818
 MonoBehaviour:
@@ -1666,6 +1666,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589832593}
   m_CullTransparentMesh: 1
+--- !u!1 &605245446
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 605245447}
+  - component: {fileID: 605245448}
+  m_Layer: 0
+  m_Name: Network NPC Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &605245447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605245446}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 920264772}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &605245448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605245446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e435c712a30712419ad2674d24edb46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkNPCManager
+  roles:
+  - {fileID: 11400000, guid: 8fd882d8055182f49b4814c4e982f726, type: 2}
+  - {fileID: 11400000, guid: 9561c8a3c7cb61546a9571ff60fdbef1, type: 2}
+  - {fileID: 11400000, guid: 1a92f440b1a117c4f83b3da87f754542, type: 2}
+  - {fileID: 11400000, guid: 6f811a3132b3dbe448c0f4f46d89bc19, type: 2}
 --- !u!1 &684175624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1968,6 +2017,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 095207bc49b18c04ca1c6ab7b795d730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRoleState
+--- !u!1 &920264771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920264772}
+  m_Layer: 0
+  m_Name: NPC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &920264772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920264771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.50749, y: 0.0187, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 538390817}
+  - {fileID: 605245447}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &947006510
 GameObject:
   m_ObjectHideFlags: 0
@@ -2153,6 +2235,7 @@ GameObject:
   - component: {fileID: 1070001243}
   - component: {fileID: 1070001246}
   - component: {fileID: 1070001245}
+  - component: {fileID: 1070001247}
   m_Layer: 0
   m_Name: Network Role Buff Manager
   m_TagString: Untagged
@@ -2213,7 +2296,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRoleBuffSystem
   ShowTopMostFoldoutHeaderGroup: 1
-  roleBuffState: {fileID: 1070001246}
   catTempSpeedDuration: 5
   redLightGreenLightDelay: 5
   redLightGreenLightDuration: 3
@@ -2233,6 +2315,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRoleBuffState
   ShowTopMostFoldoutHeaderGroup: 1
+  isClockDisabled:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  isRedLightGreenLightActive:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+--- !u!114 &1070001247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070001242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1894726097cce4b923fd7ec5a66285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkWorldBuffApplier
+  ShowTopMostFoldoutHeaderGroup: 1
+  clockState: {fileID: 263853364}
+  npcManager: {fileID: 605245448}
+  countDownUI: {fileID: 0}
 --- !u!1 &1074073975
 GameObject:
   m_ObjectHideFlags: 0
@@ -28199,8 +28307,8 @@ SceneRoots:
   - {fileID: 6684289003895343528}
   - {fileID: 5327643936513076755}
   - {fileID: 1766027261}
-  - {fileID: 538390817}
   - {fileID: 1893592330}
   - {fileID: 1070001244}
   - {fileID: 684175627}
   - {fileID: 2052995604}
+  - {fileID: 920264772}
