@@ -13,6 +13,6 @@ public class RatPlayerSpawner : MonoBehaviour
         int idx = Random.Range(0, spawnPoints.Length);
         var ratPlayer = Instantiate(ratPlayerPrefab, spawnPoints[idx].position, Quaternion.identity);
         int roleIdx = Random.Range(0, availableRoles.Length);
-        ratPlayer.GetComponent<PlayerRoleApplier>().ApplyRole(availableRoles[roleIdx]);
+        //ratPlayer.GetComponent<PlayerRoleApplier>().ApplyRole(availableRoles[roleIdx]);
     }
 }

@@ -9,7 +9,7 @@ AnimatorOverrideController:
   m_Name: StudentAnimationOverride
   m_Controller: {fileID: 9100000, guid: 76b5a109e5ea2457aa6b63cfc68c6509, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 26b7d4b6619c34819941ece224e68d53, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 3703a8dc4b6034a118d119e834ab1e74, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 3703a8dc4b6034a118d119e834ab1e74, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 5807b590c20e7403eb0c6d1edb181511, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 2212f979bdc164633ab800d8b6922dff, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 2212f979bdc164633ab800d8b6922dff, type: 2}

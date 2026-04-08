@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roleName: SalaryManNPCRole
   movementRule: 1
-  moveSpeed: 1
+  moveSpeed: 2
   minWanderTime: 2
   maxWanderTime: 3
   idleChance: 0.2

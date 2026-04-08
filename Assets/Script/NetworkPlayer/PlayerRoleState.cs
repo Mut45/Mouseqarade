@@ -1,0 +1,121 @@
+using System;
+using Unity.Netcode;
+using UnityEngine;
+
+[RequireComponent(typeof(NetworkObject))]
+public class PlayerRoleState : NetworkBehaviour
+{
+    public event Action<PlayerRole> OnRoleChanged;
+    public NetworkVariable<PlayerRole> currentRole = new (
+        PlayerRole.Mouse,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    [Header("Ability Controller References")]
+    [SerializeField] private CatAbilityController catAbility;
+    [SerializeField] private MouseAbilityController mouseAbility;
+    
+    private void Awake()
+    {
+        if (catAbility == null) catAbility = GetComponent<CatAbilityController>();
+        if (mouseAbility == null) mouseAbility = GetComponent<MouseAbilityController>();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        currentRole.OnValueChanged += HandleRoleChanged;
+        OnRoleChanged?.Invoke(currentRole.Value);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        currentRole.OnValueChanged -= HandleRoleChanged;
+    }
+    private void ApplyPlayerRole(PlayerRole role)
+    {
+        bool isMouse = role == PlayerRole.Mouse;
+
+        if (catAbility != null)
+        {
+            catAbility.enabled = !isMouse;            
+        }
+
+        if (mouseAbility != null)
+        {
+            mouseAbility.enabled = isMouse;            
+        }
+    }
+    private void HandleRoleChanged(PlayerRole prevRole, PlayerRole currRole)
+    {
+        ApplyPlayerRole(currRole);
+        OnRoleChanged?.Invoke(currRole);
+    }
+
+    public PlayerRole GetRole()
+    {
+        return currentRole.Value;
+    }
+
+    public void SetRole(PlayerRole role)
+    {
+        if (IsServer)
+        {
+            SetRoleFromServer(role);
+            return;
+        }
+        SetRoleViaServerRpc(role);
+    }
+
+
+    [ServerRpc]
+    private void SetRoleViaServerRpc(PlayerRole role)
+    {
+        SetRoleFromServer(role);
+    }
+
+    private void SetRoleFromServer(PlayerRole role)
+    {
+        if (currentRole.Value == role) return;
+
+        currentRole.Value = role;
+    }
+    // public override void OnNetworkSpawn()
+    // {
+    //     Role.OnValueChanged += OnRoleChanged;
+    //     ApplyGamplayRole(Role.Value);
+    // }
+
+    // public override void OnNetworkDespawn()
+    // {
+    //     Role.OnValueChanged -= OnRoleChanged;
+    // }
+
+    // /// <summary>
+    // /// Server only method for setting the role of a player
+    // /// </summary>
+    // /// <param name="role"></param>
+    // public void SetRole(PlayerRole role)
+    // {
+    //     if (!IsServer) return;
+    //     Role.Value = role;
+    // }
+
+    // private void OnRoleChanged(PlayerRole prevRole, PlayerRole newRole)
+    // {
+    //     ApplyGamplayRole(newRole);
+    // }
+
+    // private void ApplyGamplayRole(PlayerRole role)
+    // {
+    //     bool isMouse = role == PlayerRole.Mouse;
+    //     if (catAbility != null)
+    //     {
+    //         catAbility.enabled = !isMouse;
+    //     }
+    //     if (mouseAbility != null)
+    //     {
+    //         mouseAbility.enabled = isMouse;            
+    //     }
+    // }
+}

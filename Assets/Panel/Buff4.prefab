@@ -99,7 +99,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 375065540553587492}
-  - component: {fileID: 844521866668236905}
   m_Layer: 5
   m_Name: Buff4
   m_TagString: Untagged
@@ -129,24 +128,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 110, y: 170}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &844521866668236905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2819957915090572841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70409ab53c09ec94381248e66f84cf93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetBuffId: 3
-  buffSelectButton: {fileID: 9049268971964084034}
-  onBuffButtonClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  otherBuffPrefab: {fileID: 0}
 --- !u!1 &3684951176320105143
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +297,7 @@ GameObject:
   - component: {fileID: 7411017642521514461}
   - component: {fileID: 7921752524020757120}
   - component: {fileID: 2842793770555058133}
-  - component: {fileID: 5755833408346272563}
+  - component: {fileID: 6830875004679531922}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -382,7 +363,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5755833408346272563
+--- !u!114 &6830875004679531922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -391,27 +372,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7663496501945521539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70409ab53c09ec94381248e66f84cf93, type: 3}
+  m_Script: {fileID: 11500000, guid: bbdd3119069319740b43af8e3147aa5d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  targetBuffId: 3
+  m_EditorClassIdentifier: Assembly-CSharp::BuffCardButtonHandler
+  targetEffectId: 3
+  targetRole: 0
   buffSelectButton: {fileID: 9049268971964084034}
   onBuffButtonClicked:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  otherBuffPrefab: {fileID: 0}
+      m_Calls: []
 --- !u!1 &8687646574986691846
 GameObject:
   m_ObjectHideFlags: 0
