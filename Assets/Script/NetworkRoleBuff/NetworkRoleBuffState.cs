@@ -11,8 +11,8 @@ public enum BuffCardEffectId
     CatMoveSpeed_OnFail_Temporary = 1,
     DisableClock = 2,
     RedLightGreenLight = 3,
-    RatProximitySound = 4,
-    RatInteractionSound = 5,
+    MouseProximitySound = 4,
+    MouseInteractionSound = 5,
 }
 
 [RequireComponent(typeof(NetworkObject))]
