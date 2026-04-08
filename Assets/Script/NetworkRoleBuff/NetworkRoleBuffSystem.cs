@@ -7,8 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(NetworkRoleBuffState))]
 public class NetworkRoleBuffSystem : NetworkBehaviour
 {
-    [Header("Buff State Reference")]
-    
     [Header("Buff effect parameters config")]
     [SerializeField] private float catTempSpeedDuration = 5.0f;
     [SerializeField] private float redLightGreenLightDelay = 5.0f;
@@ -16,9 +14,6 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
 
     [Header("Clock object reference")]
     [SerializeField] private NetworkClockController clockController;
-
-    [Header("Registered cat primary action controller")]
-    private readonly HashSet<CatPrimaryActionController> registeredCatControllers = new();
 
     [Header("Debug Test")]
     [SerializeField] private PlayerRole debugRole = PlayerRole.Cat;
@@ -40,45 +35,6 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
         Instance = this;
 
     }
-
-    // #region Registering the cat player's primary action controller in the scene
-    // public void RegisterCatController(CatPrimaryActionController controller)
-    // {
-    //     if (!IsServer) return;
-    //     if (controller == null) return;
-    //     if (!registeredCatControllers.Add(controller)) return;
-
-    //     controller.OnFailedCatchNpc += HandleFailedCatchNpc;
-    // }
-
-    // public void UnregisterCatController(CatPrimaryActionController controller)
-    // {
-    //     if (controller == null) return;
-    //     if (!registeredCatControllers.Remove(controller)) return;
-
-    //     controller.OnFailedCatchNpc -= HandleFailedCatchNpc;
-    // }
-
-    // private void HandleFailedCatchNpc(CatPrimaryActionController source)
-    // {
-    //     if (!IsServer) return;
-    //     if (source == null) return;
-    //     if (NetworkRoleBuffState.Instance == null) return;
-
-    //     PlayerRoleState roleState = source.GetComponent<PlayerRoleState>();
-    //     if (roleState == null || roleState.GetRole() != PlayerRole.Cat) return;
-
-    //     if (!NetworkRoleBuffState.Instance.HasBuffForRole(
-    //         PlayerRole.Cat,
-    //         BuffCardEffectId.CatMoveSpeed_OnFail_Temporary))
-    //     {
-    //         return;
-    //     }
-
-    //     double endTime = NetworkManager.Singleton.ServerTime.Time + catTempSpeedDuration;
-    //     NetworkRoleBuffState.Instance.SetCatTempSpeedFromServer(true, endTime);
-    // }
-    // #endregion
 
     #region Acquire the buff effect for role
     public void AcquireEffectForRole(PlayerRole role, BuffCardEffectId effectId)
@@ -109,14 +65,51 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
                 NetworkRoleBuffState.Instance.SetClockDisabledFromServer(true);
                 break;
 
-            case BuffCardEffectId.RedLightGreenLight:
-                StartRedLightGreenLightFromServer();
-                break;
+            // case BuffCardEffectId.RedLightGreenLight:
+            //     StartRedLightGreenLightFromServer();
+            //     break;
         }
     }
     #endregion
 
     #region Red light green light state change sequence
+    public void TriggerRedLightGreenLight()
+    {
+        if (IsServer)
+        {
+            TriggerRedLightGreenLightFromServer();
+            return;
+        }
+
+        TriggerRedLightGreenLightViaServerRpc();
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void TriggerRedLightGreenLightViaServerRpc()
+    {
+        TriggerRedLightGreenLightFromServer();
+    }
+
+    private void TriggerRedLightGreenLightFromServer()
+    {
+        if (!IsServer) return;
+        if (NetworkRoleBuffState.Instance == null) return;
+
+        bool hasBuff = NetworkRoleBuffState.Instance.HasBuffForRole(
+        PlayerRole.Cat,
+        BuffCardEffectId.RedLightGreenLight);
+        Debug.Log($"[NetworkRoleBuffSystem] Trigger RLGL requested. Cat has buff: {hasBuff}");
+        
+        if (!NetworkRoleBuffState.Instance.HasBuffForRole(
+            PlayerRole.Cat,
+            BuffCardEffectId.RedLightGreenLight))
+        {
+            return;
+        }
+
+        StartRedLightGreenLightFromServer();
+    }
+
     private void StartRedLightGreenLightFromServer()
     {
         if (!IsServer) return;
@@ -136,7 +129,11 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
 
         NetworkRoleBuffState.Instance.SetRedLightGreenLightFromServer(true, endTime);
 
-        yield return new WaitForSeconds(redLightGreenLightDelay + redLightGreenLightDuration);
+        yield return new WaitForSeconds(redLightGreenLightDelay);
+
+        NetworkNPCManager.Instance?.PauseAndThenResume(redLightGreenLightDuration);
+
+        yield return new WaitForSeconds(redLightGreenLightDuration);
 
         NetworkRoleBuffState.Instance.SetRedLightGreenLightFromServer(false, 0);
         redLightGreenLightRoutine = null;

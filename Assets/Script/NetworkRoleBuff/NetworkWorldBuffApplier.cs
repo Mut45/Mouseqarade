@@ -5,8 +5,8 @@ public class NetworkWorldBuffApplier : NetworkBehaviour
 {
     [Header("World References")]
     [SerializeField] private NetworkClockState clockState;
-    [SerializeField] private NetworkNPCManager npcManager;
-    [SerializeField] private CountDownUI countDownUI;
+    //[SerializeField] private NetworkNPCManager npcManager;
+    //[SerializeField] private CountDownUI countDownUI;
 
     private bool wasRedLightGreenLightActive;
 
@@ -18,21 +18,6 @@ public class NetworkWorldBuffApplier : NetworkBehaviour
         }
     }
     public override void OnNetworkDespawn()
-    {
-        if (NetworkRoleBuffState.Instance != null)
-        {
-            NetworkRoleBuffState.Instance.OnRuntimeStateChanged -= ApplyWorldState;
-        }
-    }
-    private void OnEnable()
-    {
-        if (NetworkRoleBuffState.Instance != null)
-        {
-            NetworkRoleBuffState.Instance.OnRuntimeStateChanged += ApplyWorldState;
-        }
-    }
-
-    private void OnDisable()
     {
         if (NetworkRoleBuffState.Instance != null)
         {
@@ -66,6 +51,7 @@ public class NetworkWorldBuffApplier : NetworkBehaviour
         if (NetworkRoleBuffState.Instance == null) return;
 
         bool isActive = NetworkRoleBuffState.Instance.IsRedLightGreenLightActive;
+        CountDownUI countDownUI = FindCatCountdownUI();
 
         if (isActive && !wasRedLightGreenLightActive)
         {
@@ -73,16 +59,29 @@ public class NetworkWorldBuffApplier : NetworkBehaviour
             {
                 countDownUI.StartCountdown();
             }
-
-            if (npcManager != null)
-            {
-                double remainingDuration = NetworkRoleBuffState.Instance.RedLightGreenLightEndTime - Unity.Netcode.NetworkManager.Singleton.ServerTime.Time;
-                float duration = Mathf.Max(0f, (float)remainingDuration);
-                npcManager.PauseAndThenResume(duration);
-            }
         }
 
         wasRedLightGreenLightActive = isActive;
+    }
+
+    private CountDownUI FindCatCountdownUI()
+    {
+        PlayerRoleState[] players = FindObjectsByType<PlayerRoleState>(FindObjectsSortMode.None);
+
+        foreach (PlayerRoleState player in players)
+        {
+            if (player == null) continue;
+            if (!player.IsSpawned) continue;
+            if (player.GetRole() != PlayerRole.Cat) continue;
+
+            CountDownUI countdown = player.GetComponentInChildren<CountDownUI>(true);
+            if (countdown != null)
+            {
+                return countdown;
+            }
+        }
+
+        return null;
     }
 
 }

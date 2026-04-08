@@ -20,9 +20,9 @@ public class NetworkRoleBuffState : NetworkBehaviour
 {
     public static NetworkRoleBuffState Instance { get; private set; }
 
-    private NetworkList<int> catOwnedBuffs = new();
+    [SerializeField] private NetworkList<int> catOwnedBuffs = new();
 
-    private NetworkList<int> mouseOwnedBuffs = new();
+    [SerializeField] private NetworkList<int> mouseOwnedBuffs = new();
 
     // 1. Cat temporary speed buff card effect
     private NetworkVariable<bool> catTempSpeedActive = new(

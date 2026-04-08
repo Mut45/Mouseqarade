@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class NetworkNPCManager : MonoBehaviour
 {
     public static NetworkNPCManager Instance { get; private set; }
-    private readonly List<NetworkNPCController> npcs = new();
+    [SerializeField] private List<NetworkNPCController> npcs = new();
     [SerializeField] private NPCRole[] roles;
     private Coroutine pauseAndThenResumeCoroutine;
     private bool isPaused;

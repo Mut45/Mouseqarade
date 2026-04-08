@@ -114,7 +114,7 @@ public class NetworkPlayerMovementApplier : MonoBehaviour
         {
             clockMultiplier = InGameManager.Instance.GetClockBoostMultiplier();
         }
-        Debug.Log("[NetworkPlayerMovementApplier] The current clock boost multiplier is:" + clockMultiplier);
+        //Debug.Log("[NetworkPlayerMovementApplier] The current clock boost multiplier is:" + clockMultiplier);
         finalSpeed *= clockMultiplier;
         movement.SetMovementSpeed(finalSpeed);
     }

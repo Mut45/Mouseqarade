@@ -6,12 +6,14 @@ using UnityEngine;
 public class CatAbilityController : NetworkBehaviour
 {
     [SerializeField] private CatPrimaryActionController primaryActionController;
+    [SerializeField] private CatSkillController catSkillController;
     [SerializeField] private PlayerRoleState roleState;
     [SerializeField] private PlayerInteractionController interactionController;
     void Awake()
     {
         if (roleState == null) roleState = GetComponent<PlayerRoleState>();
         if (primaryActionController == null) primaryActionController = GetComponent<CatPrimaryActionController>();
+        if (catSkillController == null) catSkillController = GetComponent<CatSkillController>();
     }
 
     public void HandleInput(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
@@ -33,6 +35,25 @@ public class CatAbilityController : NetworkBehaviour
             {
                 clock.TryInteract(NetworkObject);
             }
+        }
+
+        bool secondaryJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
+        if (secondaryJustPressed)
+        {
+            Debug.Log("[CatAbilityController] Secondary pressed");
+            if (catSkillController == null)
+            {
+                Debug.LogError("[CatAbilityController] catSkillController is NULL");
+                return;
+            }
+
+            catSkillController.HandleUseSkillInput();
+        }
+
+        bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
+        if (cycleJustPressed)
+        {
+            catSkillController.HandleCycleSkillInput();
         }
     }
 }

@@ -112,9 +112,10 @@ public class NetworkedPlayerController : NetworkBehaviour
 
         inputData.InputDirection = inputDirection;
         inputData.PrimaryPressed = Input.GetKeyDown(KeyCode.Space);
-        inputData.SecondaryPressed = Input.GetKeyDown(KeyCode.Q);
+        inputData.CyclePressed = Input.GetKeyDown(KeyCode.Q); // cycle skill/item
+        inputData.SecondaryPressed = Input.GetKeyDown(KeyCode.F); // use selected skill/item
         inputData.InteractPressed = Input.GetKeyDown(KeyCode.E);
-
+        
         return inputData; 
     }
 

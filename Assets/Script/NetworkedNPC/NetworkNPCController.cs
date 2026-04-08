@@ -43,8 +43,18 @@ public class NetworkNPCController : NetworkBehaviour
         syncedDir.OnValueChanged += OnDirectionChange;
         syncedPaused.OnValueChanged += OnPausedStatusChange;
 
+        NetworkNPCManager.Instance?.Register(this);
         if (roleList != null) ApplyRoleVisuals();
         UpdateVisualState();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        syncedRoleId.OnValueChanged -= OnRoleIdChange;
+        syncedDir.OnValueChanged -= OnDirectionChange;
+        syncedPaused.OnValueChanged -= OnPausedStatusChange;
+
+        NetworkNPCManager.Instance?.Unregister(this);
     }
 
     private void Update()

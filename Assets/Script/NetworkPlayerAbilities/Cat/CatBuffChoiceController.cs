@@ -1,6 +1,14 @@
 using Unity.Netcode;
 using UnityEngine;
 
+public enum CatSkillType
+{
+    RedLightGreenLight = 0,
+    // Future:
+    // Dash = 1,
+    // RevealMouse = 2,
+}
+
 [RequireComponent(typeof(NetworkObject))]
 [RequireComponent(typeof(PlayerRoleState))]
 [RequireComponent(typeof(NetworkedPlayerController))]
