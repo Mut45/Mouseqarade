@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -184,4 +185,53 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     }
     #endregion
 
+    #region Rat interaction sound
+    public void NotifyMouseInteraction()
+    {
+        if (IsServer)
+        {
+            NotifyMouseInteractionFromServer();
+            return;
+        }
+
+        NotifyMouseInteractionViaServerRpc();
+    }
+    private void NotifyMouseInteractionFromServer()
+    {
+        if (!IsServer) return;
+        if (NetworkRoleBuffState.Instance == null) return;
+        if (NetworkManager == null) return;
+
+        bool catHasBuff = NetworkRoleBuffState.Instance.HasBuffForRole(
+            PlayerRole.Cat,
+            BuffCardEffectId.MouseInteractionSound);
+
+        if (!catHasBuff)
+            return;
+
+        if (!NetworkLookUp.TryGetPlayerObjectByRole(NetworkManager, PlayerRole.Cat, out NetworkObject catPlayerObject))
+            return;
+
+        PlayerInteractionSoundController soundController =
+            catPlayerObject.GetComponent<PlayerInteractionSoundController>();
+
+        if (soundController == null)
+            return;
+
+        ulong catClientId = catPlayerObject.OwnerClientId;
+
+        soundController.PlayInteractionSoundClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] { catClientId }
+            }
+        });
+    }
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]    
+    private void NotifyMouseInteractionViaServerRpc()
+    {
+        NotifyMouseInteractionFromServer();
+    }
+    #endregion
 }

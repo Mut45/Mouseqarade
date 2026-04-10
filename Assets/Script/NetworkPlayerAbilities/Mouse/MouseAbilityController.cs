@@ -39,5 +39,6 @@ public class MouseAbilityController : NetworkBehaviour
             return;
         }
         disguiseState.SetDisguise(true, npc.NetworkObjectId);
+        NetworkRoleBuffSystem.Instance?.NotifyMouseInteraction();
     }
 }
