@@ -26,11 +26,13 @@ public class PlayerRoleState : NetworkBehaviour
     {
         currentRole.OnValueChanged += HandleRoleChanged;
         OnRoleChanged?.Invoke(currentRole.Value);
+
     }
 
     public override void OnNetworkDespawn()
     {
         currentRole.OnValueChanged -= HandleRoleChanged;
+
     }
     private void ApplyPlayerRole(PlayerRole role)
     {

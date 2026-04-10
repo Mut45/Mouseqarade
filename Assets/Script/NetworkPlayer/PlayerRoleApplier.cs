@@ -44,6 +44,7 @@ public class PlayerRoleApplier : MonoBehaviour
             ApplyPlayerRole(roleState.GetRole());
         }
     }
+    
     #region Testing for role setting
     [ContextMenu("Test/Set Mouse Role")]
     private void TestSetMouseRole()
