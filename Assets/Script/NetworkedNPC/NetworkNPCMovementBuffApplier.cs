@@ -19,7 +19,11 @@ public class NetworkNpcMovementBuffApplier : MonoBehaviour
 
     private void OnDisable()
     {
-        InGameManager.Instance.OnClockBoostMultiplierChanged -= HandleClockBoostChanged;
+        if (InGameManager.Instance)
+        {
+            InGameManager.Instance.OnClockBoostMultiplierChanged -= HandleClockBoostChanged;
+        }
+        
     }
 
     private void HandleClockBoostChanged(float clockBoostMultiplier)
