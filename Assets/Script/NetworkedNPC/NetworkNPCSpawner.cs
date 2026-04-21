@@ -13,11 +13,21 @@ public class NetworkNPCSpawner : NetworkBehaviour
     [SerializeField] private NPCRole[] roles;
     [SerializeField] private float spawnPointCircleOffset = 0.15f;
 
+    private bool hasSpawnedBatch = false;
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
-        SpawnBatch();
     }
+
+    public void InitNPCSpawning()
+    {
+        if (!IsServer) return;
+        if (hasSpawnedBatch) return;
+
+        hasSpawnedBatch = true;
+        SpawnBatch();    
+    }
+
     public void SpawnBatch()
     {
         if (npcPrefab == null || roles == null || roles.Length == 0) return;

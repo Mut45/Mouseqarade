@@ -77,6 +77,9 @@ public class MatchStartFlow : MonoBehaviour
 
         if (ifPlayerSpawned) return;
 
+        NetworkNPCSpawner npcSpawner = FindAnyObjectByType<NetworkNPCSpawner>();
+        npcSpawner.InitNPCSpawning();
+        
         gameplaySceneLoaded = true;
         TrySpawnPlayers(); 
     }
