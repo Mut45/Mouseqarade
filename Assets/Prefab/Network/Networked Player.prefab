@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 4951667887639670819}
   - component: {fileID: 1049266479883108909}
   - component: {fileID: 8776196380894380022}
+  - component: {fileID: 2071238348780123594}
   m_Layer: 6
   m_Name: Networked Player
   m_TagString: Player
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2308459089
+  GlobalObjectIdHash: 2255119129
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -632,6 +633,18 @@ MonoBehaviour:
   roleState: {fileID: 5092814776201962532}
   audioSource: {fileID: 6412307411280192508}
   interactSoundClip: {fileID: 8300000, guid: 24ff6cbfc70bd4aa89da0c279c347b83, type: 3}
+--- !u!114 &2071238348780123594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2295270238922102630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5fa33626a79974498cbb3a2edd7b8e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &4605935809878023380
 GameObject:
   m_ObjectHideFlags: 0
