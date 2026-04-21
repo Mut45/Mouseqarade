@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Unity.Properties;
 using UnityEngine;
 
 public class LANClientListener : MonoBehaviour
@@ -66,7 +67,7 @@ public class LANClientListener : MonoBehaviour
         if (!isListening || udpClient == null) return;
 
         IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, discoveryPort);
-
+        Debug.Log("[LANClientListener] Sucessfully received host broadcast(s).");
         try
         {
             byte[] data = udpClient.EndReceive(result, ref remoteEndPoint);
@@ -91,9 +92,10 @@ public class LANClientListener : MonoBehaviour
                 GamePort = gamePort,
                 PlayerCount = playerCount,
                 MaxPlayers = maxPlayers,
-                LastSeenRealtime = Time.realtimeSinceStartup
+                LastSeenRealtime = 0f,
             };
 
+            Debug.Log($"[LANClientListening] discovered a room: {room.RoomName}");
             pendingRooms.Enqueue(room);
         }
         catch (ObjectDisposedException)
@@ -123,6 +125,7 @@ public class LANClientListener : MonoBehaviour
     {
         while (pendingRooms.TryDequeue(out GameRoomMetaData room))
         {
+            room.LastSeenRealtime = Time.realtimeSinceStartup;
             string key = $"{room.HostIpAddress}:{room.GamePort}";
             knownRooms[key] = room;
             OnRoomDiscoveredOrUpdated?.Invoke(room);

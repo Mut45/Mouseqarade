@@ -5,12 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/StartScene.unity
     guid: 974c623555059b446ad68e616464f268
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/CutScene.unity
     guid: d3ddc31dc6a647b408f47b4a64a6a9a6
+  - enabled: 0
+    path: Assets/Scenes/RelayMenu.unity
+    guid: 02658d185d7897d4aa1e43292e56d4ae
+  - enabled: 1
+    path: Assets/Scenes/LANMenu.unity
+    guid: eaf810793b1b1a6439fcf733dc1116e5
   - enabled: 1
     path: Assets/Scenes/IngameScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
@@ -21,3 +27,4 @@ EditorBuildSettings:
     path: Assets/Scenes/RatWin.unity
     guid: a364d34c5701c26408e1e90840df2db4
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

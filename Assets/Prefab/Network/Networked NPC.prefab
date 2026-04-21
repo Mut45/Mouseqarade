@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2539468331
+  GlobalObjectIdHash: 343362406
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -78,9 +78,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
   AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
+  PositionInterpolationType: 1
+  RotationInterpolationType: 1
+  ScaleInterpolationType: 1
   PositionLerpSmoothing: 1
   PositionMaxInterpolationTime: 0.1
   RotationLerpSmoothing: 1
@@ -217,7 +217,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkNpcMovementBuffApplier
   npcController: {fileID: 5144782781458730919}
-  clockSpeedMultiplier: 0
 --- !u!1 &8265960680935255905
 GameObject:
   m_ObjectHideFlags: 0
