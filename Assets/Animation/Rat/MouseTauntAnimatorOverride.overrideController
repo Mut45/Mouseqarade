@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MouseTauntAnimatorOverride
+  m_Controller: {fileID: 9100000, guid: 5cc570877c6544b798b1a4888f24dfac, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 5b275c44ebab84884a73c8a72f431e2f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a953bfd34a1c0c94ca98c2bc03dcfafa, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ce2a2af6a084049bda8263853fb6f6df, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8177514a1873dae4eadef3a5ab4a3fe4, type: 2}

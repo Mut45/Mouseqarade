@@ -20,10 +20,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
     }
+    
     public void SetMovementSpeed(float speed)
     {
         moveSpeed = speed;
     }
+    
     public void SetMovementInput(Vector2 moveInput)
     {
         if (moveInput.sqrMagnitude > 1f) moveInput = moveInput.normalized;

@@ -87,7 +87,7 @@ public class PlayerDisguiseApplier : MonoBehaviour
 
     }
 
-    private void UpdateDisguiseApplication()
+    public void UpdateDisguiseApplication()
     {
         if (roleState == null || disguiseState == null) return;
 
