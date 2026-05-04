@@ -18,8 +18,6 @@ public class CatPrimaryActionController : NetworkBehaviour
 
     public void TryPrimaryAction()
     {
-        if (!IsOwner) return;
-
         if (IsServer)
         {
             ExecuteCatchFromServer();
@@ -31,8 +29,15 @@ public class CatPrimaryActionController : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void ExecuteCatchViaServerRpc()
+    private void ExecuteCatchViaServerRpc(ServerRpcParams rpcParams = default)
     {
+        Debug.Log($"[CatPrimaryActionController] ServerRpc received from client {rpcParams.Receive.SenderClientId}");
+        
+        if (OwnerClientId != rpcParams.Receive.SenderClientId)
+        {
+            Debug.LogWarning("[CatPrimaryActionController] Rejected catch request from non-owner.");
+            return;
+        }
         ExecuteCatchFromServer();
     }
 

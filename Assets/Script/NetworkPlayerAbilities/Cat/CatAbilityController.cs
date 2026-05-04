@@ -18,13 +18,14 @@ public class CatAbilityController : NetworkBehaviour
 
     public void HandleInput(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
     {
-        if (!IsOwner) return;
+        if (!IsServer) return;
 
         if (roleState == null || roleState.GetRole() != PlayerRole.Cat) return;
 
         bool primaryJustPressed = currInput.PrimaryPressed && !prevInput.PrimaryPressed;
         if (primaryJustPressed)
         {
+            Debug.Log("[CatAbilityController] Primary pressed");
             primaryActionController.TryPrimaryAction();
         }
 
