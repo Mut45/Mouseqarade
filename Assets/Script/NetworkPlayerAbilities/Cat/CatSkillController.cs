@@ -10,13 +10,34 @@ public class CatSkillController : NetworkBehaviour
 
     [Header("Skill Definitions")]
     [SerializeField] private List<CatSkillDefinition> allSkillDefinitions = new();
-    [SerializeField] private readonly List<CatSkillDefinition> availableSkills = new();
+    [SerializeField] private List<CatSkillDefinition> availableSkills = new();
     private CatSkillDefinition currentlySelectedSkillDefinition;
     private readonly Dictionary<PlayerUsable, double> cooldownEndTimes = new();
 
     private void Awake()
     {
         allSkillDefinitions.Sort((a, b) => a.cycleOrder.CompareTo(b.cycleOrder));
+    }
+
+    public void HandleLocalInput(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
+    {
+        if (!CanHandleSkillInput()) return;
+
+        bool useJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
+
+        if (useJustPressed)
+        {
+            HandleUseSkillInput();
+        }
+
+        bool cycleJustPressed =
+        currInput.CyclePressed && !prevInput.CyclePressed;
+
+        if (cycleJustPressed)
+        {
+            HandleCycleSkillInput();
+        }
+
     }
 
     #region Input Handlers
@@ -159,18 +180,7 @@ public class CatSkillController : NetworkBehaviour
         cooldownEndTimes[definition.usable] =
             GetNetworkTime() + definition.cooldownDuration;
     }
-
-    // private void StartLocalCooldown(PlayerUsable skill, float duration)
-    // {
-    //     double now = NetworkManager.Singleton != null
-    //         ? NetworkManager.Singleton.LocalTime.Time
-    //         : Time.timeAsDouble;
-
-    //     cooldownEndTimes[skill] = now + duration;
-    // }
-
     #endregion
-
 
     #region Network Utility Helpers
     private double GetNetworkTime()
@@ -184,6 +194,7 @@ public class CatSkillController : NetworkBehaviour
     }
     #endregion
 
+    #region Helpers
     private CatSkillDefinition FindDefinitionForUsable(PlayerUsable usable)
     {
         foreach (CatSkillDefinition skillDefinition in allSkillDefinitions)
@@ -204,125 +215,25 @@ public class CatSkillController : NetworkBehaviour
 
     private bool CanHandleSkillInput()
     {
-        if (!IsServer) return false;
+        if (!IsOwner) return false;
         if (roleState == null) return false;
         return roleState.GetRole() == PlayerRole.Cat;
     }
+    #endregion
 
-//     private void Awake()
-//     {
-//         if (roleState == null) roleState = GetComponent<PlayerRoleState>();
-//     }
-
-//     private void OnEnable()
-//     {
-//         if (roleState != null)
-//         {
-//             roleState.OnRoleChanged += HandleRoleChanged;
-//         }
-//     }
-
-//     private void OnDisable()
-//     {
-//         if (roleState != null)
-//         {
-//             roleState.OnRoleChanged -= HandleRoleChanged;
-//         }
-//     }
-
-//     public override void OnNetworkSpawn()
-//     {
-//         HandleRoleChanged(roleState != null ? roleState.GetRole() : PlayerRole.Mouse);
-//     }
-
-//     private void HandleRoleChanged(PlayerRole newRole)
-//     {
-//         bool isCat = newRole == PlayerRole.Cat;
-//         enabled = true; 
-//         currentSkillIndex = Mathf.Clamp(currentSkillIndex, 0, Mathf.Max(0, playerUsables.Length - 1));
-
-//         if (!isCat)
-//         {
-//         }
-//     }
-
-//     public void HandleCycleSkillInput()
-//     {
-//         if (!CanHandleSkillInput()) return;
-//         if (playerUsables == null || playerUsables.Length == 0) return;
-
-//         currentSkillIndex = (currentSkillIndex + 1) % playerUsables.Length;
-//         Debug.Log($"[CatSkillController] Selected skill: {playerUsables[currentSkillIndex]}");
-//     }
-
-//     public void HandleUseSkillInput()
-//     {
-//         if (!CanHandleSkillInput()) return;
-//         if (playerUsables == null || playerUsables.Length == 0) return;
-
-//         PlayerUsable selectedSkill = playerUsables[currentSkillIndex];
-//         if (IsSkillOnCooldown(selectedSkill)) return;
-
-//         switch (selectedSkill)
-//         {
-//             case PlayerUsable.RedLightGreenLight:
-//                 TryUseRedLightGreenLight();
-//                 break;
-//         }
-//     }
-
-
-
-//     public PlayerUsable GetCurrentSkill()
-//     {
-//         List<PlayerUsable> availableSkills = SyncAvailableSkills();
-
-//         if (availableSkills.Count == 0)
-//         {
-//             return PlayerUsable.None;
-//         }
-
-//         currentSkillIndex = Mathf.Clamp(
-//             currentSkillIndex,
-//             0,
-//             availableSkills.Count - 1
-//         );
-
-//         return availableSkills[currentSkillIndex];
-//     }
-
-//     public float GetCooldownDuration(PlayerUsable skill)
-//     {
-//         switch (skill)
-//         {
-//             case PlayerUsable.RedLightGreenLight:
-//                 return redLightGreenLightCooldown;
-//             default:
-//                 return 0f;
-//         }
-//     }
-//     public bool HasAnySkill()
-//     {
-//         return playerUsables != null && playerUsables.Length > 0;
-//     }
-
-//     public bool IsCurrentSkillReady()
-//     {
-//         PlayerUsable currentSkill = GetCurrentSkill();
-        
-//         if(currentSkill == PlayerUsable.None)
-//         {
-//             return false;
-//         }
-
-//         return !IsSkillOnCooldown(currentSkill);
-//     }
-
+    #region Skill Logic Dispatching
     private void TryUseRedLightGreenLight(CatSkillDefinition skillDefinition)
     {
         if (NetworkRoleBuffSystem.Instance == null) return;
-        Debug.Log("[CatSkillController] TryUseRLGL() called");
+        Debug.Log(
+            $"[CatSkillController] TryUseRedLightGreenLight " +
+            $"IsServer={IsServer}, IsOwner={IsOwner}, " +
+            $"OwnerClientId={OwnerClientId}, " +
+            $"LocalClientId={NetworkManager.Singleton.LocalClientId}, " +
+            $"skill={skillDefinition?.usable}"
+        );
         NetworkRoleBuffSystem.Instance.TriggerRedLightGreenLight();
         StartLocalCooldown(skillDefinition);
     }
+    #endregion
 }

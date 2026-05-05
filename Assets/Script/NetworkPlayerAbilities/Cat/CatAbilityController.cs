@@ -38,23 +38,23 @@ public class CatAbilityController : NetworkBehaviour
             }
         }
 
-        bool secondaryJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
-        if (secondaryJustPressed)
-        {
-            Debug.Log("[CatAbilityController] Secondary pressed");
-            if (catSkillController == null)
-            {
-                Debug.LogError("[CatAbilityController] catSkillController is NULL");
-                return;
-            }
+        // bool secondaryJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
+        // if (secondaryJustPressed)
+        // {
+        //     Debug.Log("[CatAbilityController] Secondary pressed");
+        //     if (catSkillController == null)
+        //     {
+        //         Debug.LogError("[CatAbilityController] catSkillController is NULL");
+        //         return;
+        //     }
 
-            catSkillController.HandleUseSkillInput();
-        }
+        //     catSkillController.HandleUseSkillInput();
+        // }
 
-        bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
-        if (cycleJustPressed)
-        {
-            catSkillController.HandleCycleSkillInput();
-        }
+        // bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
+        // if (cycleJustPressed)
+        // {
+        //     catSkillController.HandleCycleSkillInput();
+        // }
     }
 }

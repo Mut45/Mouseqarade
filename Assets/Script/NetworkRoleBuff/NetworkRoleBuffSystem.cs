@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.MPE;
 using UnityEngine;
 
 [RequireComponent(typeof(NetworkObject))]
@@ -38,6 +39,71 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     }
 
     #region Acquire the buff effect for role
+    private bool TryMapBuffToUsableSkill(PlayerRole role, BuffCardEffectId effectId, out PlayerUsable usable)
+    {
+        usable = PlayerUsable.None;
+
+        if (role != PlayerRole.Cat)
+        {
+            return false;
+        }
+
+        switch (effectId)
+        {
+            case BuffCardEffectId.RedLightGreenLight:
+                usable = PlayerUsable.RedLightGreenLight;
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private void TryGrantUsableSkillFromBuff(PlayerRole role, BuffCardEffectId effectId)
+    {
+        if (!IsServer) return;
+
+        if (!TryMapBuffToUsableSkill(role, effectId, out PlayerUsable usable)) return;
+
+        if (!NetworkLookUp.TryGetPlayerObjectByRole(NetworkManager.Singleton,role, out NetworkObject targetPlayerObject)) return;
+
+        // Add skills to the server-side copy
+        CatSkillController serverSkillController = targetPlayerObject.GetComponent<CatSkillController>();
+        if (serverSkillController != null)
+        {
+            serverSkillController.AddUsableSkill(usable);
+        }
+
+        // Add skills to the client-side copy
+        ClientRpcParams rpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] { targetPlayerObject.OwnerClientId }
+            }
+        };
+
+        GrantUsableSkillToOwnerClientRpc(usable, rpcParams);
+    }
+
+    [ClientRpc]
+    private void GrantUsableSkillToOwnerClientRpc(
+        PlayerUsable usable,
+        ClientRpcParams rpcParams = default
+    )
+    {
+        LocalOwnedPlayerLookUp.TryGetLocalOwnedComponent<CatSkillController>(
+            out CatSkillController localCatSkillController
+        );
+
+        if (localCatSkillController == null)
+        {
+            Debug.LogWarning("[NetworkRoleBuffSystem] Could not find local CatSkillController on Cat owner client.");
+            return;
+        }
+
+        localCatSkillController.AddUsableSkill(usable);
+    }
     public void AcquireEffectForRole(PlayerRole role, BuffCardEffectId effectId)
     {
         if (IsServer)
@@ -67,9 +133,10 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
                 break;
 
             // case BuffCardEffectId.RedLightGreenLight:
-            //     StartRedLightGreenLightFromServer();
             //     break;
         }
+
+        TryGrantUsableSkillFromBuff(role, effectId);
     }
     #endregion
 
@@ -185,7 +252,7 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     }
     #endregion
 
-    #region Rat interaction sound
+    #region Mouse interaction sound
     public void NotifyMouseInteraction()
     {
         if (IsServer)
@@ -232,6 +299,33 @@ public class NetworkRoleBuffSystem : NetworkBehaviour
     private void NotifyMouseInteractionViaServerRpc()
     {
         NotifyMouseInteractionFromServer();
+    }
+    #endregion
+
+    #region Utility Helpers
+    private bool TryFindCatSkillControlerForRole(PlayerRole role, out CatSkillController catskillController)
+    {
+        catskillController = null;
+        CatSkillController[] controllers = FindObjectsByType<CatSkillController>(FindObjectsSortMode.None);
+
+        foreach (CatSkillController controller in controllers)
+        {
+            PlayerRoleState roleState = controller.GetComponent<PlayerRoleState>();
+
+            if (roleState == null)
+            {
+                continue;
+            }
+
+            if (roleState.GetRole() != role)
+            {
+                continue;
+            }
+
+            catskillController = controller;
+            return true;
+        }
+        return false;
     }
     #endregion
 }
