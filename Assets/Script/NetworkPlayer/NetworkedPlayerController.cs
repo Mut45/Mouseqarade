@@ -9,6 +9,7 @@ public class NetworkedPlayerController : NetworkBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private MouseAbilityController mouseAbility;
     [SerializeField] private CatAbilityController catAbility;
+    [SerializeField] private CatSkillController catSkill;
     [SerializeField] private PlayerRoleState roleState;
 
     private NetworkVariable<bool>  syncedMovementLock = new (
@@ -21,9 +22,11 @@ public class NetworkedPlayerController : NetworkBehaviour
         NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Server
     );
+    private PlayerInputNetworkData prevLocalInputData;
     private void Awake()
     {
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
+        if (catSkill == null) catSkill = GetComponent<CatSkillController>();
     }
 
     public override void OnNetworkSpawn()
@@ -44,6 +47,8 @@ public class NetworkedPlayerController : NetworkBehaviour
         if (IsOwner)
         {
             PlayerInputNetworkData inputData = ReadLocalInput();
+            HandleOwnerLocalInpupt(prevLocalInputData, inputData);
+
             if (IsServer)
             {
                 syncedInputData.Value = inputData;
@@ -52,6 +57,8 @@ public class NetworkedPlayerController : NetworkBehaviour
             {
                 SubmitInputDataViaServerRpc(inputData);    
             }
+
+            prevLocalInputData = inputData;
         }
 
         playerMovement.UpdateVisuals(syncedInputData.Value.InputDirection);
@@ -74,9 +81,18 @@ public class NetworkedPlayerController : NetworkBehaviour
         }
     }
 
+    private void HandleOwnerLocalInpupt(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
+    {
+        if (!IsOwner) return;
+
+        if (catSkill != null)
+        {
+            catSkill.HandleLocalInput(prevInput, currInput);
+        }
+    }   
     private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
     {
-        Debug.Log("[Network] Synced input data changed.");
+        //Debug.Log("[Network] Synced input data changed.");
         if (!IsServer) return;
 
         switch (roleState.GetRole())
@@ -114,7 +130,7 @@ public class NetworkedPlayerController : NetworkBehaviour
         inputData.PrimaryPressed = Input.GetKeyDown(KeyCode.Space);
         inputData.CyclePressed = Input.GetKeyDown(KeyCode.Q); // cycle skill/item
         inputData.SecondaryPressed = Input.GetKeyDown(KeyCode.F); // use selected skill/item
-        inputData.InteractPressed = Input.GetKeyDown(KeyCode.E);
+        inputData.InteractPressed = Input.GetKeyDown(KeyCode.E); // interact with environment
         inputData.ExtraPressed = Input.GetKeyDown(KeyCode.T); // extra key pressed for action such as taunting
         
 

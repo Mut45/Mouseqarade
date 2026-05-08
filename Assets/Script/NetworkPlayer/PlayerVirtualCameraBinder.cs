@@ -16,7 +16,6 @@ public class PlayerVirtualCameraBinder : NetworkBehaviour
         if (virtualCamera != null)
         {
             virtualCamera.Follow = transform;
-            virtualCamera.LookAt = transform;
         }
     }
 }

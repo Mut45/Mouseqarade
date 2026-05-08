@@ -25,6 +25,8 @@ public class PlayerRoleState : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         currentRole.OnValueChanged += HandleRoleChanged;
+
+        ApplyPlayerRole(currentRole.Value);
         OnRoleChanged?.Invoke(currentRole.Value);
 
     }
@@ -38,14 +40,15 @@ public class PlayerRoleState : NetworkBehaviour
     {
         bool isMouse = role == PlayerRole.Mouse;
 
+        // TODO: Enable/Disable more components as new systems are added in.
         if (catAbility != null)
         {
-            catAbility.enabled = !isMouse;            
+            catAbility.enabled = !isMouse;      
         }
 
         if (mouseAbility != null)
         {
-            mouseAbility.enabled = isMouse;            
+            mouseAbility.enabled = isMouse;     
         }
     }
     private void HandleRoleChanged(PlayerRole prevRole, PlayerRole currRole)

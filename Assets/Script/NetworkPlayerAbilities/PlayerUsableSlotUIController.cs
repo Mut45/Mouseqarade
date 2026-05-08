@@ -64,7 +64,7 @@ public class PlayerUsableSlotUI : MonoBehaviour
 
         if (catSkillController == null)
         {
-            Debug.LogWarning("[PlayerUsableSlotUIController] Can't find the Cat skill controller");
+            // Debug.LogWarning("[PlayerUsableSlotUIController] Can't find the Cat skill controller");
             visualRoot.SetActive(false);
             return;
         }

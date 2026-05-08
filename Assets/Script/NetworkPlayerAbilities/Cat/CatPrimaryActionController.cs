@@ -96,7 +96,7 @@ public class CatPrimaryActionController : NetworkBehaviour
 
         if (InGameManager.Instance != null)
         {
-            InGameManager.Instance.OnMouseBeingCaught();
+            InGameManager.Instance.OnMouseCaught();
         }
     }
 

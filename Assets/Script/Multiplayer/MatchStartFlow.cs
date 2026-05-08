@@ -44,6 +44,7 @@ public class MatchStartFlow : MonoBehaviour
         }
     }
     
+    #region Client Connection Handlers
     private void HandleClientConnected(ulong clientId)
     {
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
@@ -83,7 +84,9 @@ public class MatchStartFlow : MonoBehaviour
         gameplaySceneLoaded = true;
         TrySpawnPlayers(); 
     }
+    #endregion
 
+    #region Loading & Spawning Players
     private void TryGameplaySceneLoad()
     {
         if (gameplaySceneLoadRequested) return;
@@ -170,8 +173,51 @@ public class MatchStartFlow : MonoBehaviour
             roleState.SetRole(role);
         }
 
+        if (role == PlayerRole.Mouse)
+        {
+            ApplyRandomDisguiseToPlayer(playerInstance);
+        }
+
     }
 
+    private void ApplyRandomDisguiseToPlayer(GameObject playerObject)
+    {
+        if (!NetworkManager.Singleton.IsServer) return;
+        if (playerObject == null) return;
+
+        PlayerDisguiseState disguiseState = playerObject.GetComponent<PlayerDisguiseState>();
+        if (disguiseState == null) return;
+
+        NetworkNPCController[] npcs = FindObjectsByType<NetworkNPCController>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None
+        );
+
+        List<NetworkNPCController> validNpcs = new();
+        foreach (NetworkNPCController npc in npcs)
+        {
+            if (npc == null) continue;
+            if (npc.NetworkObject == null) continue;
+            if (!npc.NetworkObject.IsSpawned) continue;
+            if (npc.GetRole() == null) continue;
+
+            validNpcs.Add(npc);
+        }
+
+        if (validNpcs.Count == 0)
+        {
+            Debug.LogWarning("[MatchStartFlow] No valid spawned NPCs found. Mouse starts undisguised.");
+            disguiseState.ClearDisguise();
+            return;
+        }
+
+        NetworkNPCController randomNpc = validNpcs[Random.Range(0, validNpcs.Count)];
+        disguiseState.SetDisguise(true, randomNpc.NetworkObjectId);
+
+    }
+    #endregion
+
+    #region  Rematch
     public void StartMatchOrRematchFromServer()
     {
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
@@ -192,4 +238,5 @@ public class MatchStartFlow : MonoBehaviour
         gameplaySceneLoaded = false;
         gameplaySceneLoadRequested = false;
     }
+    #endregion
 }

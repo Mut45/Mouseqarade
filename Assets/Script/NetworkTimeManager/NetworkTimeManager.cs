@@ -85,7 +85,11 @@ public class NetworkTimeManager : NetworkBehaviour
         {
             syncedRemainingTime.Value = 0f;
             StopCountdown();
-            Debug.Log("[TimeManager] Countdown finished.");
+            if (InGameManager.Instance != null)
+            {
+                InGameManager.Instance.OnTimeRanOut();
+            }
+
             return;
         }
 
