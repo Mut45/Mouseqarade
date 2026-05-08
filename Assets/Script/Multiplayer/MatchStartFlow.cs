@@ -171,4 +171,25 @@ public class MatchStartFlow : MonoBehaviour
         }
 
     }
+
+    public void StartMatchOrRematchFromServer()
+    {
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
+
+        ResetMatchStateFlagsForRematch();
+        int clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
+        if (clientCount != 2)
+        {
+            Debug.LogWarning($"[MatchStartFlow] Cannot start match/rematch. ClientCount={clientCount}");
+            return;
+        }
+
+        TryGameplaySceneLoad();
+    }
+    private void ResetMatchStateFlagsForRematch()
+    {
+        ifPlayerSpawned = false;
+        gameplaySceneLoaded = false;
+        gameplaySceneLoadRequested = false;
+    }
 }
