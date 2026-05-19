@@ -1,0 +1,3 @@
+repository "Mousequerade/Mousequerade@20066407245999@cloud"
+  path "/"
+    smartbranch "/main/dev/feat-aoe-targeting-system"

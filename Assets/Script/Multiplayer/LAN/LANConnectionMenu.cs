@@ -1,12 +1,9 @@
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEditor.MemoryProfiler;
-using UnityEditor.PackageManager;
 
 
 public class LANConnectionMenu : MonoBehaviour
