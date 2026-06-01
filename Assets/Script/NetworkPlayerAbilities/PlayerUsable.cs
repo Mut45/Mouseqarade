@@ -4,7 +4,4 @@ public enum PlayerUsable
 
     // Cat skills
     RedLightGreenLight = 100,
-
-    // Mouse items
-    
 }

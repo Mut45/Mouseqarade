@@ -4,10 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-// TODO: Future Implementation When the Mouse Skill System is Introduced
-// 1. CatSkillController implements IPlayerUsableController
-// 2. MouseItemController implements IPlayerUsableController
-// 3. PlayerUsableSlotUI reads IPlayerUsableController
 public class PlayerUsableSlotUI : MonoBehaviour
 {
     [Header("UI")]

@@ -65,13 +65,35 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     }
 
-    public void SetMovementLock(bool locked)
+    public void SetMovementLockFromServer(bool locked)
     {
         if (IsServer)
         {
             syncedMovementLock.Value = locked;
         }
     }
+
+    #region Movement Lock Request Flow
+    public void RequestMovementLock(bool locked)
+    {
+        if (!IsOwner) return;
+
+        if (IsServer)
+        {
+            SetMovementLockFromServer(locked);
+        }
+        else
+        {
+            RequestMveomentLockServerRpc(locked);
+        }
+    }
+
+    [ServerRpc]
+    private void RequestMveomentLockServerRpc(bool locked)
+    {
+        SetMovementLockFromServer(locked);
+    }
+    #endregion
 
     private void HandleMovementLockChanged(bool prevValue, bool currValue)
     {
