@@ -1,8 +1,7 @@
 using Unity.Netcode;
-using UnityEditor.SearchService;
 using UnityEngine;
 
-public class SandboxItemInventoryTester : MonoBehaviour
+public class SandboxItemInventoryTester : NetworkBehaviour
 {
     [Header("Target")]
     [SerializeField] private PlayerItemInventory targetInventory;
@@ -14,20 +13,67 @@ public class SandboxItemInventoryTester : MonoBehaviour
 
     private void Update()
     {
-        if (!NetworkManager.Singleton.IsServer)
+        if (NetworkManager.Singleton == null)
             return;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            AddItem(ItemId.SmokeBomb, amountToAdd);
+            RequestAddItem(ItemId.SmokeBomb, amountToAdd);
         }
 
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            RequestAddItem(itemToAdd, amountToAdd);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            RequestSetItemLevel(itemToAdd, levelToSet);
+        }
+    }
+
+    private void RequestAddItem(ItemId itemId, int amount)
+    {
+        if (IsServer)
+        {
+            AddItemFromServer(itemId, amount);
+        }
+        else
+        {
+            RequestAddItemServerRpc(itemId, amount);
+        }
+    }
+
+    [ServerRpc]
+    private void RequestAddItemServerRpc(ItemId itemId, int amount)
+    {
+        AddItemFromServer(itemId, amount);
+    }
+
+    private void RequestSetItemLevel(ItemId itemId, int level)
+    {
+        if (IsServer)
+        {
+            SetItemLevelFromServer(itemId, level);
+        }
+        else
+        {
+            RequestSetItemLevelServerRpc(itemId, level);
+        }
+    }
+
+    [ServerRpc]
+    private void RequestSetItemLevelServerRpc(ItemId itemId, int level)
+    {
+        SetItemLevelFromServer(itemId, level);
     }
 
     [ContextMenu("Find Mouse Inventory")]
     private void FindMouseInventory()
     {
-        PlayerItemInventory[] inventories = FindObjectsByType<PlayerItemInventory>(FindObjectsSortMode.None);
+        PlayerItemInventory[] inventories =
+            FindObjectsByType<PlayerItemInventory>(FindObjectsSortMode.None);
 
         foreach (PlayerItemInventory inventory in inventories)
         {
@@ -47,21 +93,16 @@ public class SandboxItemInventoryTester : MonoBehaviour
     [ContextMenu("Add Debug Item")]
     private void AddDebugItem()
     {
-        AddItem(itemToAdd, amountToAdd);
+        RequestAddItem(itemToAdd, amountToAdd);
     }
 
     [ContextMenu("Set Debug Item Level")]
     private void SetSelectedDebugItemLevel()
     {
-        if (!CanModifyInventory())
-            return;
-
-        targetInventory.SetItemLevelFromServer(itemToAdd, levelToSet);
-
-        Debug.Log($"[SandboxItemInventoryTester] Set {itemToAdd} level to {levelToSet}.");
+        RequestSetItemLevel(itemToAdd, levelToSet);
     }
 
-    private void AddItem(ItemId itemId, int amount)
+    private void AddItemFromServer(ItemId itemId, int amount)
     {
         if (!CanModifyInventory())
             return;
@@ -71,11 +112,21 @@ public class SandboxItemInventoryTester : MonoBehaviour
         Debug.Log($"[SandboxItemInventoryTester] Added {amount}x {itemId}.");
     }
 
+    private void SetItemLevelFromServer(ItemId itemId, int level)
+    {
+        if (!CanModifyInventory())
+            return;
+
+        targetInventory.SetItemLevelFromServer(itemId, level);
+
+        Debug.Log($"[SandboxItemInventoryTester] Set {itemId} level to {level}.");
+    }
+
     private bool CanModifyInventory()
     {
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
+        if (!IsServer)
         {
-            Debug.LogWarning("[SandboxItemInventoryTester] Only the server/host can modify inventory.");
+            Debug.LogWarning("[SandboxItemInventoryTester] Only the server can modify inventory.");
             return false;
         }
 
