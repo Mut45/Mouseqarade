@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -7,6 +8,7 @@ public class NetworkedPlayerController : NetworkBehaviour
 {
     [Header("Player Movement & Ability Reference")]
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private MouseItemController mouseItem;
     [SerializeField] private MouseAbilityController mouseAbility;
     [SerializeField] private CatAbilityController catAbility;
     [SerializeField] private CatSkillController catSkill;
@@ -107,9 +109,22 @@ public class NetworkedPlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (catSkill != null)
+        if (roleState == null) return;
+
+        switch (roleState.GetRole())
         {
-            catSkill.HandleLocalInput(prevInput, currInput);
+            case PlayerRole.Mouse:
+                if (mouseItem != null)
+                {
+                    mouseItem.HandleLocalInput(prevInput, currInput);
+                }
+                break;
+            case PlayerRole.Cat:
+                if (catSkill != null)
+                {
+                    catSkill.HandleLocalInput(prevInput, currInput);
+                }
+                break;
         }
     }   
     private void HandleSyncedInputChanged(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)

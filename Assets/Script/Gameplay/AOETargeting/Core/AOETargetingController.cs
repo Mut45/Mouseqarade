@@ -38,8 +38,15 @@ public class AOETargetingController : MonoBehaviour
         if (item.UseMode != ItemUseMode.AOETargeted) return;
 
         ItemUpgradeData levelData = item.GetLevelData(itemLevel);
+        if (levelData == null)
+        {
+            Debug.LogWarning($"[AOETargetingController] No level data found for item {item.DisplayName}, level {itemLevel}.");
+            return;
+        }
+        
         currentItemDefinition = item;
         currentLevelData = levelData;
+
         isTargeting = true;
         targetPosition = transform.position;
 

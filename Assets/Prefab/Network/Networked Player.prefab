@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
   radius: 2.5
   maxUseDistance: 5
+  useMode: 1
   targetMask:
     serializedVersion: 2
     m_Bits: 0
@@ -495,9 +496,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkedPlayerController
   ShowTopMostFoldoutHeaderGroup: 1
   playerMovement: {fileID: 7173084272521007188}
+  mouseItem: {fileID: 3111860822016708301}
   mouseAbility: {fileID: 2654918430892036862}
   catAbility: {fileID: 1779243336396233593}
-  catSkill: {fileID: 0}
+  catSkill: {fileID: 4951667887639670819}
   roleState: {fileID: 5092814776201962532}
 --- !u!61 &3588964243904524426
 BoxCollider2D:
@@ -1049,6 +1051,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerItemInventory
   ShowTopMostFoldoutHeaderGroup: 1
   itemDB: {fileID: 5644740173101709784}
+  items:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
 --- !u!114 &5644740173101709784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1144,6 +1150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
   radius: 2.5
   maxUseDistance: 5
+  useMode: 1
   targetMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1322,6 +1329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
   radius: 2.5
   maxUseDistance: 5
+  useMode: 1
   targetMask:
     serializedVersion: 2
     m_Bits: 0

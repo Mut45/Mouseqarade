@@ -39601,7 +39601,7 @@ MonoBehaviour:
   targetInventory: {fileID: 0}
   itemToAdd: 1
   amountToAdd: 3
-  levelToSet: 1
+  levelToSet: 0
 --- !u!114 &1697126668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39639,6 +39639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a8e88505dc0d64e9dabf5d679439b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryDebugViewer
+  ShowTopMostFoldoutHeaderGroup: 1
   targetInventory: {fileID: 0}
   debugEntries: []
   autoFindMouseInventory: 1
