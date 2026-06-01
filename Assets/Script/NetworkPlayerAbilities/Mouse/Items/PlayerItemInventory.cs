@@ -12,7 +12,7 @@ using System.Collections.Generic;
 public class PlayerItemInventory : NetworkBehaviour
 {
     [SerializeField] private ItemDatabase itemDB;
-    private NetworkList<ItemInventoryEntry> items;
+    [SerializeField] private NetworkList<ItemInventoryEntry> items;
     public event Action OnInventoryChanged;
 
     private void Awake()
