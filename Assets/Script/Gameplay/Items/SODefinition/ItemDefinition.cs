@@ -37,12 +37,13 @@ public class ItemDefinition : ScriptableObject
 
     public ItemUpgradeData GetLevelData(int level)
     {
-        if (levels == null || levels.Length == 0 || level < 0 || level >= levels.Length)
+        int levelDataIndex = level - 1;
+        if (levels == null || levels.Length == 0 || levelDataIndex < 0 || levelDataIndex >= levels.Length)
         {
             Debug.LogWarning($"[ItemDefinition] {name} has no upgrade level data.");
             return null;
         }
 
-        return levels[level];
+        return levels[levelDataIndex];
     }
 }

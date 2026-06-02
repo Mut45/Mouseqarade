@@ -39601,7 +39601,7 @@ MonoBehaviour:
   targetInventory: {fileID: 0}
   itemToAdd: 1
   amountToAdd: 3
-  levelToSet: 0
+  levelToSet: 1
 --- !u!114 &1697126668
 MonoBehaviour:
   m_ObjectHideFlags: 0
