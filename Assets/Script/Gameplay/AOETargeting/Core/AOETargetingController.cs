@@ -151,7 +151,7 @@ public class AOETargetingController : MonoBehaviour
             playerMovement.SetMovementLocked(locked);
         }
 
-        if (playerController == null)
+        if (playerController != null)
         {
             playerController.RequestMovementLock(locked);
         }
