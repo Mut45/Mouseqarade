@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -13,6 +14,7 @@ public class NetworkedPlayerController : NetworkBehaviour
     [SerializeField] private CatAbilityController catAbility;
     [SerializeField] private CatSkillController catSkill;
     [SerializeField] private PlayerRoleState roleState;
+    [SerializeField] private AOETargetingController aoeTargetingController;
 
     private NetworkVariable<bool>  syncedMovementLock = new (
         false,
@@ -29,6 +31,7 @@ public class NetworkedPlayerController : NetworkBehaviour
     {
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
         if (catSkill == null) catSkill = GetComponent<CatSkillController>();
+        if (aoeTargetingController == null) aoeTargetingController = GetComponentInChildren<AOETargetingController>();
     }
 
     public override void OnNetworkSpawn()
@@ -118,12 +121,14 @@ public class NetworkedPlayerController : NetworkBehaviour
                 {
                     mouseItem.HandleLocalInput(prevInput, currInput);
                 }
+
                 break;
             case PlayerRole.Cat:
                 if (catSkill != null)
                 {
                     catSkill.HandleLocalInput(prevInput, currInput);
                 }
+
                 break;
         }
     }   
@@ -162,6 +167,11 @@ public class NetworkedPlayerController : NetworkBehaviour
         Vector2 inputDirection = new Vector2(horizontalInput, verticalInput);
         // diagonal input should not be more than the horizontal or the vertical movement
         if (inputDirection.sqrMagnitude > 1f) inputDirection = inputDirection.normalized;
+
+        if (aoeTargetingController != null && aoeTargetingController.IsTargeting)
+        {
+            inputDirection = Vector2.zero;
+        }
 
         inputData.InputDirection = inputDirection;
         inputData.PrimaryPressed = Input.GetKeyDown(KeyCode.Space);

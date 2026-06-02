@@ -28,6 +28,12 @@ public class PlayerMovement : MonoBehaviour
     
     public void SetMovementInput(Vector2 moveInput)
     {
+        if (ifMovementLocked)
+        {
+            currentMoveInput = Vector2.zero;
+            return;
+        }
+        
         if (moveInput.sqrMagnitude > 1f) moveInput = moveInput.normalized;
 
         currentMoveInput = moveInput;
