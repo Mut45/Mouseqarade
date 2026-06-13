@@ -46,10 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
   radius: 2.5
   maxUseDistance: 5
+  itemDefinition: {fileID: 11400000, guid: f19c18fbc36a9d54e8289fe54d253b41, type: 2}
   useMode: 1
   targetMask:
     serializedVersion: 2
     m_Bits: 0
+  smokeAffectedAreaPrefab: {fileID: 8748571973785827458, guid: 106a8cc76e5a47842855096bcc02c6d5, type: 3}
 --- !u!1 &815853325627191287
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2255119129
+  GlobalObjectIdHash: 2308459089
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -501,6 +503,7 @@ MonoBehaviour:
   catAbility: {fileID: 1779243336396233593}
   catSkill: {fileID: 4951667887639670819}
   roleState: {fileID: 5092814776201962532}
+  aoeTargetingController: {fileID: 0}
 --- !u!61 &3588964243904524426
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1013,8 +1016,6 @@ GameObject:
   - component: {fileID: 4702786481113274612}
   - component: {fileID: 3111860822016708301}
   - component: {fileID: 4442105206920160165}
-  - component: {fileID: 8052665781890468272}
-  - component: {fileID: 3782305358051643644}
   m_Layer: 6
   m_Name: Player Item Root
   m_TagString: Untagged
@@ -1136,36 +1137,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   itemDatabase: {fileID: 5644740173101709784}
   inventory: {fileID: 7590250670510267351}
---- !u!114 &8052665781890468272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4687681408894188225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff52bd414d284434fbadbb2dfa036eb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
-  radius: 2.5
-  maxUseDistance: 5
-  useMode: 1
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &3782305358051643644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4687681408894188225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c91109dba0a492d45932e86a36951ed3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShuffleCardItem
 --- !u!1 &5912892272298324491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,8 +1260,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8182357138861589986}
-  - component: {fileID: 3496038613289767295}
-  - component: {fileID: 6992781785925547423}
   m_Layer: 6
   m_Name: Player Item Runtime Effects
   m_TagString: Untagged
@@ -1315,36 +1284,6 @@ Transform:
   - {fileID: 3914479502719254120}
   m_Father: {fileID: 5806363552358677840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3496038613289767295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7658678461261712597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff52bd414d284434fbadbb2dfa036eb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SmokeBombItem
-  radius: 2.5
-  maxUseDistance: 5
-  useMode: 1
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &6992781785925547423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7658678461261712597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c91109dba0a492d45932e86a36951ed3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShuffleCardItem
 --- !u!1 &9213282691016829459
 GameObject:
   m_ObjectHideFlags: 0

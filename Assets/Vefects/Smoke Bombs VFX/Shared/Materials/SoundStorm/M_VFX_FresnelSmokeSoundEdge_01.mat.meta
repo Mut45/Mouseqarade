@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: af66ed8dc0c57a146b52a719dff2ee49
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257148
+  packageName: VFX Ultra Bundle
+  packageVersion: 1.1.2023
+  assetPath: Assets/Vefects/Smoke Bombs VFX/Shared/Materials/SoundStorm/M_VFX_FresnelSmokeSoundEdge_01.mat
+  uploadId: 714747

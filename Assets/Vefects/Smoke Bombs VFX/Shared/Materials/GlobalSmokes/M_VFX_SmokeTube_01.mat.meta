@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1d56d63227cdff84581f9fe714846dda
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257148
+  packageName: VFX Ultra Bundle
+  packageVersion: 1.1.2023
+  assetPath: Assets/Vefects/Smoke Bombs VFX/Shared/Materials/GlobalSmokes/M_VFX_SmokeTube_01.mat
+  uploadId: 714747
