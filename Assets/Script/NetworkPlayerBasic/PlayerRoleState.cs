@@ -26,7 +26,7 @@ public class PlayerRoleState : NetworkBehaviour
     {
         currentRole.OnValueChanged += HandleRoleChanged;
 
-        ApplyPlayerRole(currentRole.Value);
+        // ApplyPlayerRole(currentRole.Value);
         OnRoleChanged?.Invoke(currentRole.Value);
 
     }
@@ -36,24 +36,25 @@ public class PlayerRoleState : NetworkBehaviour
         currentRole.OnValueChanged -= HandleRoleChanged;
 
     }
-    private void ApplyPlayerRole(PlayerRole role)
-    {
-        bool isMouse = role == PlayerRole.Mouse;
 
-        // TODO: Enable/Disable more components as new systems are added in.
-        if (catAbility != null)
-        {
-            catAbility.enabled = !isMouse;      
-        }
+    // Legacy, moving the below component to a separate script
+    // private void ApplyPlayerRole(PlayerRole role)
+    // {
+    //     bool isMouse = role == PlayerRole.Mouse;
 
-        if (mouseAbility != null)
-        {
-            mouseAbility.enabled = isMouse;     
-        }
-    }
+    //     if (catAbility != null)
+    //     {
+    //         catAbility.enabled = !isMouse;      
+    //     }
+
+    //     if (mouseAbility != null)
+    //     {
+    //         mouseAbility.enabled = isMouse;     
+    //     }
+    // }
     private void HandleRoleChanged(PlayerRole prevRole, PlayerRole currRole)
     {
-        ApplyPlayerRole(currRole);
+        //ApplyPlayerRole(currRole);
         OnRoleChanged?.Invoke(currRole);
     }
 

@@ -177,7 +177,7 @@ public class NetworkedPlayerController : NetworkBehaviour
         inputData.PrimaryPressed = Input.GetKeyDown(KeyCode.Space);
         inputData.CyclePressed = Input.GetKeyDown(KeyCode.Q); // cycle skill/item
         inputData.SecondaryPressed = Input.GetKeyDown(KeyCode.F); // use selected skill/item
-        inputData.InteractPressed = Input.GetKeyDown(KeyCode.E); // interact with environment
+        inputData.InteractPressed = Input.GetKey(KeyCode.E); // interact with environment(hold)
         inputData.ExtraPressed = Input.GetKeyDown(KeyCode.T); // extra key pressed for action such as taunting
         
 
