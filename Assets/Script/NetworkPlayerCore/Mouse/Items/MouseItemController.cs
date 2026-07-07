@@ -1,11 +1,9 @@
 
 using System.Collections.Generic;
-using System.Data.Common;
-using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// Dispatches based on user input and stores UI state, local only,
+/// Dispatches based on user input, local only
 /// </summary>
 [RequireComponent(typeof(ItemUseController))]
 [RequireComponent(typeof(AOETargetingController))]
@@ -18,6 +16,7 @@ public class MouseItemController : MonoBehaviour
     [SerializeField] private ItemUseController itemUseController;
     [SerializeField] private AOETargetingController targetingController;
     [SerializeField] private PlayerItemInventory inventory;
+    [SerializeField] private PlayerHandUIController handUIController;
     
     private List<ItemInventoryEntry> sortedAvailableItems = new();
     private ItemDefinition currentlySelectedItem;
@@ -41,6 +40,16 @@ public class MouseItemController : MonoBehaviour
         {
             aoeTargetController = GetComponent<AOETargetingController>();
         }
+
+        // if (handUIController == null)
+        // {
+        //     handUIController = GetComponentInChildren<PlayerHandUIController>(true);
+        // }
+
+        // if (handUIController != null)
+        // {
+        //     handUIController.Initialize(itemDatabase);
+        // }
     }
 
     void OnEnable()
@@ -48,6 +57,9 @@ public class MouseItemController : MonoBehaviour
        if (inventory == null) return;
 
        inventory.OnInventoryChanged += HandleInventoryChanged;
+        UpdateSortedAvailableItems();
+        RefreshSelectionAfterInventoryChanged();
+        RefreshHandUI();
     }
 
     void OnDisable()
@@ -61,17 +73,40 @@ public class MouseItemController : MonoBehaviour
     public void HandleLocalInput(PlayerInputNetworkData prevInput, PlayerInputNetworkData currInput)
     {
         bool useJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
+        bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
+        bool flipJustPressed = Input.GetKeyDown(KeyCode.X);
+
+        // Tis handles the situation where the aoe targeting flow has started
+        if (aoeTargetController != null && aoeTargetController.IsTargeting)
+        {
+            if (useJustPressed)
+            {
+                aoeTargetController.ConfirmTargeting(currentlySelectedItem);
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                CancelAOETargeting();
+            }
+
+            return;
+        }
 
         if (useJustPressed)
         {
             HandleUseItemInput();
         }
 
-        bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
-
-        if (cycleJustPressed)
+        if (cycleJustPressed && handUIController != null && handUIController.State == PlayerHandUIState.Selecting)
         {
             HandleCycleItemInput();
+        }
+
+        if (flipJustPressed && handUIController != null &&  
+            (handUIController.State == PlayerHandUIState.Selecting || handUIController.State == PlayerHandUIState.SpecificInformation)
+        )
+        {
+            handUIController?.ToggleSelectedCardDetails();
         }
 
         if (Input.GetKeyDown(KeyCode.C))
@@ -82,13 +117,38 @@ public class MouseItemController : MonoBehaviour
 
     private void HandleUseItemInput()
     {
-        if (aoeTargetController != null && aoeTargetController.IsTargeting)
-        {
-            aoeTargetController.ConfirmTargeting(currentlySelectedItem);
-            return;
-        }
+        if (handUIController == null) return;
 
-        TryUseSelectedItem();
+        switch (handUIController.State)
+        {
+            case PlayerHandUIState.Default:
+                UpdateSortedAvailableItems();
+                RefreshSelectionAfterInventoryChanged();
+
+                if (sortedAvailableItems.Count == 0)
+                {
+                    ResetSelection();
+                    RefreshHandUI();
+                    return;
+                }
+
+                ValidateSelection();
+                RefreshHandUI();
+                handUIController.SetState(PlayerHandUIState.Selecting);
+                break;
+
+            case PlayerHandUIState.Selecting:
+                ValidateSelection();
+                handUIController.SetState(PlayerHandUIState.Default);
+                TryUseSelectedItem();
+                break;
+            
+            case PlayerHandUIState.SpecificInformation:
+                ValidateSelection();
+                handUIController.SetState(PlayerHandUIState.Default);
+                TryUseSelectedItem();
+                break;
+        }
     }
 
     private void HandleCycleItemInput()
@@ -96,10 +156,17 @@ public class MouseItemController : MonoBehaviour
         if (sortedAvailableItems.Count == 0)
         {
             ResetSelection();
+            RefreshHandUI();
             return;
         }
+
         currentlySelectedIndex++;
         if (currentlySelectedIndex >= sortedAvailableItems.Count) currentlySelectedIndex = 0;
+        currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[currentlySelectedIndex]);
+        currentSelectedItemId = sortedAvailableItems[currentlySelectedIndex].ItemId;
+
+        RefreshHandUI();
+        handUIController?.SetCurrentlySelected(currentlySelectedIndex);
         Debug.Log("[MouesItemController] Item selection switched, currently selected item is: " + currentlySelectedItem.DisplayName);
     }
 
@@ -113,6 +180,9 @@ public class MouseItemController : MonoBehaviour
         // Edge case 2: Player used up all of the available items, the selected item becomes item none with empty icon
         UpdateSortedAvailableItems();
         RefreshSelectionAfterInventoryChanged();
+        RefreshHandUI();
+        // handUIController?.SetItems(sortedAvailableItems);
+        // handUIController?.SetSelectedIndex(currentlySelectedIndex);
     }
 
     private void RefreshSelectionAfterInventoryChanged()
@@ -130,6 +200,8 @@ public class MouseItemController : MonoBehaviour
                 if (sortedAvailableItems[i].ItemId == currentlySelectedItem.Id)
                 {
                     currentlySelectedIndex = i;
+                    currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[i]);
+                    currentSelectedItemId = sortedAvailableItems[i].ItemId;
                     return;
                 }
             }
@@ -137,11 +209,13 @@ public class MouseItemController : MonoBehaviour
 
         currentlySelectedIndex = 0;
         currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[0]);
+        currentSelectedItemId = sortedAvailableItems[0].ItemId;
     }
 
     private void ResetSelection()
     {
         currentlySelectedItem = null;
+        currentSelectedItemId = ItemId.None;
         currentlySelectedIndex = -1;
     }
     #endregion
@@ -228,6 +302,33 @@ public class MouseItemController : MonoBehaviour
 
     #endregion
 
+    #region Card Hand UI Visuals
+    public void SetHandUIController(PlayerHandUIController handUI)
+    {
+        if (handUI != null)
+        {
+            handUIController = handUI;
+        }
+        
+    }
+
+    private void RefreshHandUI()
+    {
+        Debug.Log("[MouseItemController] RefreshHandUI called.");
+
+        if (handUIController == null) 
+        {
+            Debug.LogWarning("[MouseItemController] handUIController is null.");
+
+            return;
+        }
+        
+        Debug.Log("[MouseItemController] Binding hand UI. itemCount=" + sortedAvailableItems.Count);
+        Debug.Log("[MouseItemController] itemDatabase is " + (itemDatabase != null ? "set" : "null"));
+        handUIController.BindCards(sortedAvailableItems, itemDatabase, currentlySelectedIndex);
+    }
+    #endregion
+
     #region Helper Funcitons
     private int GetCycleOrder(ItemId itemId)
     {
@@ -249,6 +350,26 @@ public class MouseItemController : MonoBehaviour
         }
 
         return null;
+    }
+    #endregion
+
+    #region Validation
+    private void ValidateSelection()
+    {
+        if (sortedAvailableItems.Count == 0)
+        {
+            ResetSelection();
+            return;
+        }
+
+        if (currentlySelectedIndex < 0 || currentlySelectedIndex >= sortedAvailableItems.Count)
+        {
+            currentlySelectedIndex = 0;
+        }
+
+        ItemInventoryEntry entry = sortedAvailableItems[currentlySelectedIndex];
+        currentlySelectedItem = GetDefininitionFromEntry(entry);
+        currentSelectedItemId = entry.ItemId;
     }
     #endregion
 
