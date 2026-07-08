@@ -20,7 +20,6 @@ public class MouseItemController : MonoBehaviour
     
     private List<ItemInventoryEntry> sortedAvailableItems = new();
     private ItemDefinition currentlySelectedItem;
-    private ItemId currentSelectedItemId;
     private int currentlySelectedIndex;
     public bool IsAoeTargeting;
 
@@ -41,15 +40,6 @@ public class MouseItemController : MonoBehaviour
             aoeTargetController = GetComponent<AOETargetingController>();
         }
 
-        // if (handUIController == null)
-        // {
-        //     handUIController = GetComponentInChildren<PlayerHandUIController>(true);
-        // }
-
-        // if (handUIController != null)
-        // {
-        //     handUIController.Initialize(itemDatabase);
-        // }
     }
 
     void OnEnable()
@@ -75,6 +65,7 @@ public class MouseItemController : MonoBehaviour
         bool useJustPressed = currInput.SecondaryPressed && !prevInput.SecondaryPressed;
         bool cycleJustPressed = currInput.CyclePressed && !prevInput.CyclePressed;
         bool flipJustPressed = Input.GetKeyDown(KeyCode.X);
+        bool cancelJustPressed = Input.GetKeyDown(KeyCode.C);
 
         // Tis handles the situation where the aoe targeting flow has started
         if (aoeTargetController != null && aoeTargetController.IsTargeting)
@@ -89,6 +80,11 @@ public class MouseItemController : MonoBehaviour
                 CancelAOETargeting();
             }
 
+            return;
+        }
+        if (cancelJustPressed)
+        {
+            HandleCancelInput();
             return;
         }
 
@@ -109,10 +105,7 @@ public class MouseItemController : MonoBehaviour
             handUIController?.ToggleSelectedCardDetails();
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            CancelAOETargeting();
-        }
+
     }
 
     private void HandleUseItemInput()
@@ -163,13 +156,28 @@ public class MouseItemController : MonoBehaviour
         currentlySelectedIndex++;
         if (currentlySelectedIndex >= sortedAvailableItems.Count) currentlySelectedIndex = 0;
         currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[currentlySelectedIndex]);
-        currentSelectedItemId = sortedAvailableItems[currentlySelectedIndex].ItemId;
+        //currentSelectedItemId = sortedAvailableItems[currentlySelectedIndex].ItemId;
 
         RefreshHandUI();
         handUIController?.SetCurrentlySelected(currentlySelectedIndex);
         Debug.Log("[MouesItemController] Item selection switched, currently selected item is: " + currentlySelectedItem.DisplayName);
     }
 
+    private void HandleCancelInput()
+    {
+        if (handUIController == null) return;
+
+        switch (handUIController.State)
+        {
+            case PlayerHandUIState.Selecting:
+                handUIController.CancelSelection();
+                break;
+
+            case PlayerHandUIState.SpecificInformation:
+                handUIController.SetState(PlayerHandUIState.Default);
+                break;
+        }
+    }
     #endregion
 
     #region Inventory Change Handling
@@ -201,7 +209,7 @@ public class MouseItemController : MonoBehaviour
                 {
                     currentlySelectedIndex = i;
                     currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[i]);
-                    currentSelectedItemId = sortedAvailableItems[i].ItemId;
+                    //currentSelectedItemId = sortedAvailableItems[i].ItemId;
                     return;
                 }
             }
@@ -209,13 +217,13 @@ public class MouseItemController : MonoBehaviour
 
         currentlySelectedIndex = 0;
         currentlySelectedItem = GetDefininitionFromEntry(sortedAvailableItems[0]);
-        currentSelectedItemId = sortedAvailableItems[0].ItemId;
+        //currentSelectedItemId = sortedAvailableItems[0].ItemId;
     }
 
     private void ResetSelection()
     {
         currentlySelectedItem = null;
-        currentSelectedItemId = ItemId.None;
+        //currentSelectedItemId = ItemId.None;
         currentlySelectedIndex = -1;
     }
     #endregion
@@ -369,7 +377,7 @@ public class MouseItemController : MonoBehaviour
 
         ItemInventoryEntry entry = sortedAvailableItems[currentlySelectedIndex];
         currentlySelectedItem = GetDefininitionFromEntry(entry);
-        currentSelectedItemId = entry.ItemId;
+        //currentSelectedItemId = entry.ItemId;
     }
     #endregion
 

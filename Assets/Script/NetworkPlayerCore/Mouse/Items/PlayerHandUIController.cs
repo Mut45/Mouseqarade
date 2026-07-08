@@ -19,6 +19,9 @@ public class PlayerHandUIController : MonoBehaviour
     [Header("Cards")]
     [SerializeField] private MouseItemCardUI[] cardUIs;
 
+    [Header("Input Prompt")]
+    [SerializeField] private GameObject inputPromptRoot;
+
     [Header("Curved Hand Layout")]
     [SerializeField] private float cardSpacing = 95f;
     [SerializeField] private float selectingBaseYOffset = 65f;
@@ -27,19 +30,20 @@ public class PlayerHandUIController : MonoBehaviour
     [SerializeField] private float foldedY = -100f;
     [SerializeField] private float curveHeight = 45f;
     [SerializeField] private float maxFanAngle = 18f;
-    [SerializeField] private float selectedYOffset = 190f;
+    [SerializeField] private float selectedYOffset = 115f;
     [SerializeField] private float foldedScale = 0.85f;
     [SerializeField] private float selectedScale = 1.15f;
 
     private PlayerHandUIState currentState = PlayerHandUIState.Default;
     private int selectedIndex = -1;
-
+    private MouseItemCardUI selectedCard;
     public PlayerHandUIState State => currentState;
 
     #region Exposed Public Functions For Updating States
     public void SetState(PlayerHandUIState state)
     {
         currentState = state;
+        UpdateInputPromptVisibility();
         UpdateCardsVisual();
     }
 
@@ -47,6 +51,7 @@ public class PlayerHandUIController : MonoBehaviour
     {
         selectedIndex = index;
         UpdateCardsVisual();
+        UpdateInputPromptVisibility();
     }
 
     public void BindCards(List<ItemInventoryEntry> entries, ItemDatabase itemDatabase, int index)
@@ -91,7 +96,17 @@ public class PlayerHandUIController : MonoBehaviour
         }
 
         UpdateCardsVisual();
+        UpdateInputPromptVisibility();
 
+    }
+
+    public void CancelSelection()
+    {
+        if (currentState != PlayerHandUIState.Selecting) return;
+
+        currentState = PlayerHandUIState.Default;
+        UpdateCardsVisual();
+        UpdateInputPromptVisibility();
     }
 
     public void ToggleSelectedCardDetails()
@@ -108,12 +123,40 @@ public class PlayerHandUIController : MonoBehaviour
         }
 
         MouseItemCardUI selected = GetCurrentlySelectedCard();
-        selected.StartFakeFlipping();
+        if (selected != null)
+        {
+            selected.StartFakeFlipping();
+        }
+
+        UpdateCardsVisual();
+        UpdateInputPromptVisibility();
 
     }
     #endregion
 
     #region Helpers
+    private void UpdateInputPromptVisibility()
+    {
+        bool isSelecting = currentState == PlayerHandUIState.Selecting;
+        if (inputPromptRoot != null)
+        {
+            inputPromptRoot.SetActive(isSelecting);
+        }
+
+        if (cardUIs == null) return;
+
+        for (int i = 0; i < cardUIs.Length; i++)
+        {
+            if (cardUIs[i] == null) continue;
+
+            bool shouldShowFlipPrompt =
+                isSelecting &&
+                i == selectedIndex &&
+                cardUIs[i].gameObject.activeSelf;
+
+            cardUIs[i].SetFlipInputPromptVisible(shouldShowFlipPrompt);
+        }
+    }
     private void UpdateCardsVisual()
     {
         // Start from the center calculate the positon of the card relative to x = 0
@@ -143,8 +186,14 @@ public class PlayerHandUIController : MonoBehaviour
                 newY += selectedYOffset;
                 rotationZ = 0f;
                 newScale = selectedScale;
+                selectedCard = cardUIs[i];
             }
             cardUIs[i].ApplyPoseInHand(new Vector2(newX, newY), rotationZ, newScale);
+        }
+
+        if (selectedCard != null)
+        {
+            selectedCard.BringToFront();
         }
 
     }

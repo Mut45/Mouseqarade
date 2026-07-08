@@ -17,6 +17,7 @@ public class MouseItemCardUI : MonoBehaviour
     [SerializeField] private GameObject cardFront;
     [SerializeField] private GameObject cardBack;
     [SerializeField] private TMP_Text countText;
+    [SerializeField] private GameObject flipInputPrompt;
 
     [Header("Parameters")]
     [SerializeField] private float flipDuration;
@@ -28,6 +29,7 @@ public class MouseItemCardUI : MonoBehaviour
     {
         if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
         ShowFront();
+        SetFlipInputPromptVisible(false);
     }
 
     #region Exposed Public Functions For Visual Controls
@@ -63,6 +65,7 @@ public class MouseItemCardUI : MonoBehaviour
         countText.text = entry.Count.ToString();
 
         ShowFront();
+        SetFlipInputPromptVisible(false);
     }
 
     public void ApplyPoseInHand(Vector2 anchoredPosition, float rotationZ, float scale)
@@ -70,6 +73,19 @@ public class MouseItemCardUI : MonoBehaviour
         rectTransform.anchoredPosition = anchoredPosition;
         rectTransform.localRotation = Quaternion.Euler(0f, 0f, rotationZ);
         rectTransform.localScale = new Vector3(scale, scale, 1f);
+    }
+
+    public void SetFlipInputPromptVisible(bool visible)
+    {
+        if (flipInputPrompt != null)
+        {
+            flipInputPrompt.SetActive(visible);
+        }
+    }
+
+    public void BringToFront()
+    {
+        transform.SetAsLastSibling();
     }
     #endregion
 
