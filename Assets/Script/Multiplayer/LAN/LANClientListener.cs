@@ -33,7 +33,7 @@ public class LANClientListener : MonoBehaviour
 
             udpClient.BeginReceive(OnReceiveBroadcast, null);
 
-            Debug.Log($"[LANClientListener] Listening on UDP discovery port {discoveryPort}");
+            // Debug.Log($"[LANClientListener] Listening on UDP discovery port {discoveryPort}");
         }
         catch (Exception ex)
         {
@@ -59,7 +59,7 @@ public class LANClientListener : MonoBehaviour
 
         while (pendingRooms.TryDequeue(out _)) { }
 
-        Debug.Log("[LANClientListener] Stopped listening.");
+        // Debug.Log("[LANClientListener] Stopped listening.");
     }
 
     private void OnReceiveBroadcast(IAsyncResult result)
@@ -67,7 +67,7 @@ public class LANClientListener : MonoBehaviour
         if (!isListening || udpClient == null) return;
 
         IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, discoveryPort);
-        Debug.Log("[LANClientListener] Sucessfully received host broadcast(s).");
+        // Debug.Log("[LANClientListener] Sucessfully received host broadcast(s).");
         try
         {
             byte[] data = udpClient.EndReceive(result, ref remoteEndPoint);
@@ -95,7 +95,7 @@ public class LANClientListener : MonoBehaviour
                 LastSeenRealtime = 0f,
             };
 
-            Debug.Log($"[LANClientListening] discovered a room: {room.RoomName}");
+            // Debug.Log($"[LANClientListening] discovered a room: {room.RoomName}");
             pendingRooms.Enqueue(room);
         }
         catch (ObjectDisposedException)

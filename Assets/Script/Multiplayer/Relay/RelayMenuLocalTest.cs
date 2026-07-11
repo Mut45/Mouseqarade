@@ -25,7 +25,7 @@ public class RelayMenuLocalTest : MonoBehaviour
         if (!started)
             return;
 
-        Debug.Log($"[RelayMenu] IsServer={nm.IsServer}, IsHost={nm.IsHost}, IsListening={nm.IsListening}");
+        // Debug.Log($"[RelayMenu] IsServer={nm.IsServer}, IsHost={nm.IsHost}, IsListening={nm.IsListening}");
 
         if (!nm.NetworkConfig.EnableSceneManagement)
         {
@@ -42,7 +42,7 @@ public class RelayMenuLocalTest : MonoBehaviour
             matchFlow.InitAfterServerStart();
         }
         SetStatus($"Scene load request result: {loadStatus}");
-        Debug.Log($"[RelayMenu] LoadScene returned: {loadStatus}");
+        // Debug.Log($"[RelayMenu] LoadScene returned: {loadStatus}");
     }
 
     public void StartClientLocal()
@@ -60,7 +60,7 @@ public class RelayMenuLocalTest : MonoBehaviour
 
     private void SetStatus(string message)
     {
-        Debug.Log($"[RelayMenu] {message}");
+        // Debug.Log($"[RelayMenu] {message}");
 
         if (statusText != null)
             statusText.text = message;

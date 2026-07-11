@@ -187,7 +187,7 @@ public class LANConnectionMenu : MonoBehaviour
 
     private void CreateRoomEntryUIElements(GameRoomMetaData room)
     {
-        Debug.Log($"[LANConnectionMenu] Room Stats: {room.RoomName}");
+        // Debug.Log($"[LANConnectionMenu] Room Stats: {room.RoomName}");
         string addressPortKey = $"{room.HostIpAddress}:{room.GamePort}";
         if(!hostAddressToRoomEntryDict.TryGetValue(addressPortKey, out GameObject entry) || entry == null)
         {
@@ -272,33 +272,15 @@ public class LANConnectionMenu : MonoBehaviour
         SwitchToEmptyUI();
     }
 
-    void OnApplicationQuit()
-    {
-        try
-        {
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogWarning($"[LanConnectionMenu] NetworkManager shutdown warning: {ex.Message}");
-        }
-    }
 
     void OnDestroy()
     {
-        try
+        RemoveButtonListeners();
+
+        if (clientDiscovery != null)
         {
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogWarning($"[LanConnectionMenu] NetworkManager shutdown warning: {ex.Message}");
+            clientDiscovery.OnRoomDiscoveredOrUpdated
+                -= CreateRoomEntryUIElements;
         }
     }
 
@@ -326,7 +308,7 @@ public class LANConnectionMenu : MonoBehaviour
 
     private void SetStatus(string message)
     {
-        Debug.Log($"[LANConnectionMenu] {message}");
+        // Debug.Log($"[LANConnectionMenu] {message}");
 
         if (statusText != null)
             statusText.text = message;
@@ -343,5 +325,32 @@ public class LANConnectionMenu : MonoBehaviour
         }
 
         hostAddressToRoomEntryDict.Clear();
+    }
+
+    private void RemoveButtonListeners()
+    {
+        if (toCreateRoomFlowButton != null)
+            toCreateRoomFlowButton.onClick.RemoveListener(
+                OnToCreateRoomFlowButtonPressed);
+
+        if (toJoinRoomFlowButton != null)
+            toJoinRoomFlowButton.onClick.RemoveListener(
+                OnToJoinRoomFlowButtonPresseed);
+
+        if (confirmCreateRoomButton != null)
+            confirmCreateRoomButton.onClick.RemoveListener(
+                OnCreateRoomButtonPressed);
+
+        if (hostBackButton != null)
+            hostBackButton.onClick.RemoveListener(
+                OnHostBackButtonPressed);
+
+        if (refreshRoomsButton != null)
+            refreshRoomsButton.onClick.RemoveListener(
+                OnRefreshButtonPressed);
+
+        if (joinBackButton != null)
+            joinBackButton.onClick.RemoveListener(
+                OnJoinBackButtonPressed);
     }
 }

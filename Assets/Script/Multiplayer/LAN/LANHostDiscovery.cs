@@ -49,7 +49,7 @@ public class LANHostDiscovery : MonoBehaviour
         endpoint = new IPEndPoint(IPAddress.Broadcast, broadcastPort);
         isBroadcasting = true;
         InvokeRepeating(nameof(Broadcast), 0.5f, 1f);
-        Debug.Log($"[LanDiscoveryHost] Broadcasting room '{currentRoomName}' on discovery port {broadcastPort}");
+        // Debug.Log($"[LanDiscoveryHost] Broadcasting room '{currentRoomName}' on discovery port {broadcastPort}");
     }
 
     public void StopBroadcast()

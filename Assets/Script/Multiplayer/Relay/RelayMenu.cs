@@ -178,7 +178,7 @@ public class RelayMenu : MonoBehaviour
 
         if (nm != null && (nm.IsClient || nm.IsServer || nm.IsListening))
         {
-            Debug.Log("[RelayMenu] Shutting down active network session.");
+            // Debug.Log("[RelayMenu] Shutting down active network session.");
             nm.Shutdown();
         }
 

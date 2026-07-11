@@ -50,7 +50,7 @@ public class MatchStartFlow : MonoBehaviour
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
 
         int clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
-        Debug.Log($"[MatchStartFlow] Client connected: {clientId}. Total clients: {NetworkManager.Singleton.ConnectedClientsIds.Count}");
+        // Debug.Log($"[MatchStartFlow] Client connected: {clientId}. Total clients: {NetworkManager.Singleton.ConnectedClientsIds.Count}");
 
         if (!gameplaySceneLoaded && !gameplaySceneLoadRequested && clientCount == 2)
         {
@@ -65,7 +65,7 @@ public class MatchStartFlow : MonoBehaviour
     {
         if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
 
-        Debug.Log($"[MatchStartFlow] Client disconnected: {clientId}. Total clients: {NetworkManager.Singleton.ConnectedClientsIds.Count}");
+        // Debug.Log($"[MatchStartFlow] Client disconnected: {clientId}. Total clients: {NetworkManager.Singleton.ConnectedClientsIds.Count}");
     }
 
     private void HandleLoadCompleted(
@@ -104,7 +104,7 @@ public class MatchStartFlow : MonoBehaviour
         SceneEventProgressStatus loadStatus =
             NetworkManager.Singleton.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
 
-        Debug.Log($"[MatchStartFlow] Gameplay scene load requested. Result: {loadStatus}");
+        // Debug.Log($"[MatchStartFlow] Gameplay scene load requested. Result: {loadStatus}");
     }
 
     private void TrySpawnPlayers()
@@ -115,7 +115,7 @@ public class MatchStartFlow : MonoBehaviour
         int clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
         if (clientCount != 2)
         {
-            Debug.Log($"[MatchStartFlow] Waiting to spawn. GameplayLoaded={gameplaySceneLoaded}, ClientCount={clientCount}");
+            // Debug.Log($"[MatchStartFlow] Waiting to spawn. GameplayLoaded={gameplaySceneLoaded}, ClientCount={clientCount}");
             return;
         }
 
@@ -133,7 +133,7 @@ public class MatchStartFlow : MonoBehaviour
     private void SpawnMatchPlayers(PlayerSpawnManager spawnManager)
     {
         List<ulong> clientIds = new(NetworkManager.Singleton.ConnectedClientsIds);
-        Debug.Log("[MatchStartFlow] The number of clients is: " + clientIds.Count);
+        // Debug.Log("[MatchStartFlow] The number of clients is: " + clientIds.Count);
 
         int catIndex = Random.Range(0, 2);
         ulong catClientId = clientIds[catIndex];
