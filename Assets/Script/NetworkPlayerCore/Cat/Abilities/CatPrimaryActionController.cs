@@ -31,7 +31,7 @@ public class CatPrimaryActionController : NetworkBehaviour
     [ServerRpc]
     private void ExecuteCatchViaServerRpc(ServerRpcParams rpcParams = default)
     {
-        Debug.Log($"[CatPrimaryActionController] ServerRpc received from client {rpcParams.Receive.SenderClientId}");
+        // Debug.Log($"[CatPrimaryActionController] ServerRpc received from client {rpcParams.Receive.SenderClientId}");
         
         if (OwnerClientId != rpcParams.Receive.SenderClientId)
         {
@@ -111,10 +111,6 @@ public class CatPrimaryActionController : NetworkBehaviour
             npcTarget.ResumeMovement();
         }
 
-        if (NetworkRoleBuffSystem.Instance != null)
-        {
-            NetworkRoleBuffSystem.Instance.NotifyCatFailedCatch();
-        }
     }
 
     [ClientRpc]
